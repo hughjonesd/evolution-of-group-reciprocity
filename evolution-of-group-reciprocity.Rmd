@@ -56,13 +56,13 @@ There are the following types of players:
 * Group reciprocity ($g$-) types harm a target from group X, if and only if the last time
   somebody from group X acted against them, that person harmed them.
   
-Let $\pi^i_\sigma$ be the proportion of individuals of type $\sigma \in \{s, r, g\}$ in
-group $i$. Let $\pi_\sigma$ be the overall proportion of type $\sigma$ in the population.
+Let $\pi^i_\tau$ be the proportion of individuals of type $\tau \in \{s, r, g\}$ in
+group $i$. Let $\pi_\tau$ be the overall proportion of type $\tau$ in the population.
 
-Write $h^t_{ij}$ for the probability that an individual from group $i$ helps
+We denote by $h^t_{ij}$ the probability that an individual from group $i$ helps
 an individual from group $j$ in period $t$.
 
-We can calculate this as follows:
+We can calculate it as follows:
 
 \begin{equation}
 h^{t+1}_{ij} = \pi^i_s0  
@@ -78,18 +78,20 @@ help. The second term gives the probability of a r-type helping. This is given
 by the overall probability that the r-type was helped by any one actor from the
 $G$ individuals (one from each group) who targeted her in the previous period.
 The third term gives the probability that a group reciprocal g-type was
-previously helped by an actor from group $j$. Setting $h^0_{ij} = 1$ for all $i,
-j$ ensures that the sum is correct in the first period.
+previously helped by an actor from group $j$. 
+<!-- Setting $h^0_{ij} = 1$ for all $i, -->
+<!-- j$ ensures that the sum is correct in the first period. -->
+We set $h^0_{ij} = 1$ for all $i,j$, reflecting the assumption that non-selfish types start by cooperating (like in Tit-for-Tat).
 
 Total payoffs are averaged over all periods and normalized by the number of groups $G$. 
 When $T \rightarrow \infty$ the payoffs will
 be determined by the steady state such that $h^{t+1}_{ij} = h^{t}_{ij} \equiv h_{ij}$ for all
 $i,j\in \mathcal{G}$.
 
-Denote by $X \subset \mathcal{G}$ the set of groups $i$ which contain *only* 
+Denote by $X \subset \mathcal{G}$ the set of groups $i$ that contain *only* 
 group-reciprocators: $\pi^i_g = 1$.
 
-*Theorem*. There is a unique steady state. If $\pi_s > 0$ it is as follows:
+*Theorem*. Depending on whether $\pi_s > 0$ or $\pi_s = 0$, there is a unique steady state. If $\pi_s > 0$ it is as follows:
 
 * For all $i, j \in X$, $h_{ij} = 1$.
 * For all $i \notin X$ and all $j \in \mathcal{G}$, $h_{ij} = h_{ji} = 0$.
@@ -113,14 +115,14 @@ have a reason to stop.)
 When $\pi_s > 0$, first note that if $i \in X$, $h_{ij} = h_{ji}$; furthermore, if
 $i,j \in X$, $h_{ij} = h_{ji} = 1$ again by using the initial condition.
 
-Pick $i,j$ such that 
+Pick now $i,j$ such that 
 
 \begin{equation}
-h_{ij} = \bar{h} \equiv max_{k,l; k \notin X} h_{kl}.
+h_{ij} = \bar{h} \equiv max_{k,l; k \notin X} h_{kl},
 \label{eq:max-h}
 \end{equation}
 
-For a contradiction, suppose that $h_{ij} > 0$. 
+and suppose by negation that $h_{ij} > 0$. 
 
 Fix an arbitrary group $k$. If $k \in X$ then $h_{ki} = h_{ik}$ as just noted and 
 $h_{ik} \le h_{ij}$ by (\ref{eq:max-h}); if $k \notin X$
@@ -131,10 +133,14 @@ implies:
 1. $\pi^i_s = 0$;
 2. $h_{ki} = h_{ij} = \bar{h}$ for all groups $k$.
 
-Now apply the above argument to $h_{ki}$ for any $k \notin X$. This shows $\pi^k_s = 0$.
-But for $k \in X$, $\pi^k_s = 0$ by definition. Thus $\pi_s = 0$. Contradiction. This
-shows $h_{ik} = 0$ for all $i \notin X$ and all $k$. Finally, if $i \in X$ and $k \notin X$,
-$h_{ik} = h_{ki}$ as noted above, and this is 0. QED.
+Now apply the above argument to
+<!-- $h_{ki}$ for  -->
+any $i' \notin X$. This shows $\pi^{i'}_s = 0$ $\forall i' \notin X$.
+But for $i' \in X$, $\pi^{i'}_s = 0$ by definition. Thus $\pi_s = 0$, in contradiction to the assumption made. This
+shows $h_{ik} = 0$ for all $i \notin X$ and all $k \in \mathcal{G}$. Finally, if $i \in X$ and $k \notin X$, we get
+$h_{ik} = h_{ki}=0$.
+<!-- as noted above, and this is 0. -->
+QED.
 
 [XXX: there might be a simpler "contraction mapping" argument to immediately prove 
 the steady states are unique.]
