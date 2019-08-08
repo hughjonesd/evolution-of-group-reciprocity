@@ -1,0 +1,331 @@
+---
+title: "Evolution of group reciprocity"
+author: "David Hugh-Jones, Moti Michaeli, Ro'i Zultan"
+date: "31/07/2019"
+output: pdf_document
+bibliography: grouprec.bib
+header-includes:
+  - \usepackage{amsmath}
+---
+
+# Introduction
+
+Humans reciprocate good actions for good and bad for bad [cites]. Rather than
+ reciprocating back at the person who harmed or helped them, they may also
+pay it forward, passing on good or bad actions to a third party. To date, evolutionary
+theorists have concentrated on models of "generalized reciprocity", in which people who receive
+a good (bad) turn become nicer (nastier) to everyone in the population.
+
+Evidence from many venues suggests that often, reciprocity is more
+narrowly focused than that. In civil wars, tit-for-tat conflicts take place between
+groups. Ethnic riots can be sparked by the bad behaviour (real or imagined) of
+an outgroup member; in revenge, the entire group is targeted. Institutions like
+the blood feud involve cycles of retaliation between different families or clans [cite boehm].
+In all these cases, reciprocity is aimed at specific groups.
+
+
+
+
+# Theory
+
+## A single generation
+
+There are $G$ groups. Each group has $N$ members. The set of groups is
+$\mathcal{G} = \{1 ... G\}$.
+
+[XXX may need group sizes to vary due to evolution, in which case N is the group size above which the group splits/establishes new groups]
+
+A single generation consists of $T$ periods. In every period, each
+individual "acts" against one randomly selected member (the "target") from
+*each* group. That is, let $P$ be the set of permutations $(p_1, ..., p_N)$ of
+$(1, ..., N)$ such that $p_i \ne i$ for all $i$. For each pair of groups $i, j$,
+a permutation $p$ is drawn from the uniform distribution on $P$. Player $m$ of
+group $i$ acts against player $p_m$ of group $j$. Thus each player acts against
+one member of each group, and is the target of one member from each group.
+
+
+The acting player unilaterally chooses whether to "help" or "harm" the target. Helping
+costs 1 to the player and benefits the target by $b > 1$. Harming has zero cost
+and zero benefit. (Alternatively and equivalently, helping has zero cost and
+benefit, while harming gives 1 to the player and costs the target $b$.)
+
+There are the following types of players: 
+
+* Selfish ($s$-) types always harm.
+* Generalized reciprocity ($r$-) types harm if and only if they were harmed in the previous period.
+* Group reciprocity ($g$-) types harm a target from group X, if and only if the last time
+  somebody from group X acted against them, that person harmed them.
+  
+Let $\pi^i_\tau$ be the proportion of individuals of type $\tau \in \{s, r, g\}$ in
+group $i$. Let $\pi_\tau$ be the overall proportion of type $\tau$ in the population.
+
+We denote by $h^t_{ij}$ the probability that an individual from group $i$ helps
+an individual from group $j$ in period $t$.
+
+We can calculate it as follows:
+
+\begin{equation}
+h^{t+1}_{ij} = \pi^i_s0  
+      + \pi^i_r \frac{1}{G}\sum_{k \in \mathcal{G}} h^t_{ki} 
+      + \pi^i_g h^t_{ji}
+\label{eq:help-ij}
+\end{equation}
+
+[XXX could we write the above in matrix form?]
+
+Here, the first term reflects the fact that selfish types in group $i$ never
+help. The second term gives the probability of a r-type helping. This is given
+by the overall probability that the r-type was helped by any one actor from the
+$G$ individuals (one from each group) who targeted her in the previous period.
+The third term gives the probability that a group reciprocal g-type was
+previously helped by an actor from group $j$. 
+<!-- Setting $h^0_{ij} = 1$ for all $i, -->
+<!-- j$ ensures that the sum is correct in the first period. -->
+We set $h^0_{ij} = 1$ for all $i,j$, reflecting the assumption that non-selfish types start by cooperating (like in Tit-for-Tat).
+
+Total payoffs are averaged over all periods and normalized by the number of groups $G$. 
+When $T \rightarrow \infty$ the payoffs will
+be determined by the steady state such that $h^{t+1}_{ij} = h^{t}_{ij} \equiv h_{ij}$ for all
+$i,j\in \mathcal{G}$.
+
+Denote by $X \subset \mathcal{G}$ the set of groups $i$ that contain *only* 
+group-reciprocators: $\pi^i_g = 1$.
+
+*Theorem*. Depending on whether $\pi_s > 0$ or $\pi_s = 0$, there is a unique steady state. If $\pi_s > 0$ it is as follows:
+
+* For all $i, j \in X$, $h_{ij} = 1$.
+* For all $i \notin X$ and all $j \in \mathcal{G}$, $h_{ij} = h_{ji} = 0$.
+
+If $\pi_s = 0$, the steady state is $h_{ij} = 1$ for all groups $i, j$.
+
+*Proof*. To prove these values are steady states, plug them into the fixed point equations:
+
+\begin{equation}
+h_{ij} = \pi^i_s0  
+      + \pi^i_r \frac{1}{G}\sum_{k \in \mathcal{G}} h_{ki} 
+      + \pi^i_g h_{ji}
+\label{eq:help-ij-fixed}
+\end{equation}
+
+To prove they are the unique steady states: when $\pi_s = 0$, the second
+and third terms in (\ref{eq:help-ij}) always sum to 1, by induction from the first period. 
+(If nobody is selfish, then all players in all groups start by helping and never
+have a reason to stop.) 
+
+When $\pi_s > 0$, first note that if $i \in X$, $h_{ij} = h_{ji}$; furthermore, if
+$i,j \in X$, $h_{ij} = h_{ji} = 1$ again by using the initial condition.
+
+Pick now $i,j$ such that 
+
+\begin{equation}
+h_{ij} = \bar{h} \equiv max_{k,l; k \notin X} h_{kl},
+\label{eq:max-h}
+\end{equation}
+
+and suppose by negation that $h_{ij} > 0$. 
+
+Fix an arbitrary group $k$. If $k \in X$ then $h_{ki} = h_{ik}$ as just noted and 
+$h_{ik} \le h_{ij}$ by (\ref{eq:max-h}); if $k \notin X$
+then $h_{ki} \le h_{ij}$ again by (\ref{eq:max-h}). In either case, then, $h_{ki} \le h_{ij}$, for any $k$. 
+Since (\ref{eq:help-ij-fixed}) is a weighted sum of $h_{ki}$'s and 0, this immediately
+implies:
+
+1. $\pi^i_s = 0$;
+2. $h_{ki} = h_{ij} = \bar{h}$ for all groups $k$.
+
+Now apply the above argument to
+<!-- $h_{ki}$ for  -->
+any $i' \notin X$. This shows $\pi^{i'}_s = 0$ $\forall i' \notin X$.
+But for $i' \in X$, $\pi^{i'}_s = 0$ by definition. Thus $\pi_s = 0$, in contradiction to the assumption made. This
+shows $h_{ik} = 0$ for all $i \notin X$ and all $k \in \mathcal{G}$. Finally, if $i \in X$ and $k \notin X$, we get
+$h_{ik} = h_{ki}=0$.
+<!-- as noted above, and this is 0. -->
+QED.
+
+[XXX: there might be a simpler "contraction mapping" argument to immediately prove 
+the steady states are unique.]
+
+Remark: if all groups have the same proportion of selfish types, then group
+and generalized reciprocators always behave identically. This can be shown
+by induction from period 1.
+
+## Payoffs
+
+If $T$ approaches infinity, the payoffs from the generation can be approximated by
+the steady state payoffs, since play is arbitrarily close to the steady state for an
+arbitrarily large number of periods.
+
+The steady state payoffs for any member of group $i \notin X$ are 0 since
+these groups never help and are never helped. If I am a member of $i \in X$, my payoffs
+are $\frac{|X|}{G}(b - 1)$; each period, a member of every group in $X$ helps me, and I help
+a member of every such group.
+
+In general, we can compute payoffs per period. Note that within a given group,
+g-types and r-types always get the same payoff. This is because they are helped
+equally often, and they do the same amount of helping (look at equation (\ref{eq:help-ij})).
+
+```{r setup, echo = FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r compute_functions}
+
+# compute h^t recursively given G-length vectors of \pi^i_s, \pi^i_r, \pi^i_g
+h_t <- function (pi_s, pi_r, pi_g, G, t) {
+  stopifnot(G >= 1L)
+  stopifnot(t >= 1L)
+  stopifnot(length(pi_s) == G)
+  stopifnot(length(pi_r) == G)
+  stopifnot(length(pi_g) == G)
+  stopifnot(all(c(pi_s, pi_r, pi_g) >= 0))
+  stopifnot(isTRUE(all.equal(pi_s + pi_r + pi_g, rep(1.0, G))))
+  t <- as.integer(t)
+  
+  calc_h_t <- function (t) {
+    h <- matrix(NA_real_, G, G)
+    if (t == 1L) {
+      h[] <- rep(pi_r + pi_g, G) # row i is i'th element
+      return(h)
+    }
+    h_prev_t <- calc_h_t(t - 1L)
+    h[]   <- pi_r * colMeans(h_prev_t) + pi_g * t(h_prev_t)
+    return(h)
+  }
+  
+  calc_h_t(t)
+}
+
+
+plot_helping <- function(pi_s, pi_r, pi_g, T) {
+  stopifnot(T >= 1L)
+  G <- length(pi_s)
+  h_ts <- lapply(1:T, function (t) h_t(pi_s, pi_r, pi_g, G = G, t = t))
+  # rows are groups, columns are periods:
+  helping_rates <- vapply(h_ts, rowMeans, FUN.VALUE = numeric(G))
+  helped_rates <- vapply(h_ts, colMeans, FUN.VALUE = numeric(G))
+  split.screen(c(2, 1))
+  matplot(t(helping_rates), type = "p", xlab = "t", ylab = "Helping rate", ylim = c(0, 1))
+  matlines(t(helping_rates))
+  screen(2)
+  matplot(t(helped_rates), type = "p", xlab = "t", ylab = "Helped rate", ylim = c(0, 1))
+  matlines(t(helped_rates))
+  close.screen(all = TRUE)
+}
+
+# calculates payoffs for each type in each group, a 3 x G matrix
+# if invaders is TRUE payoffs are shown even for types that don't exist in a group
+# if just_t is not null, return only payoffs for round t
+total_payoffs <- function(pi_s, pi_r, pi_g, T, b, invaders = FALSE, just_t = NULL) {
+  stopifnot(T >= 1L, b >= 1)
+  if (! is.null(just_t)) stopifnot(just_t <= T, just_t >= 1)
+  
+  G <- length(pi_s)
+  h_ts <- lapply(1:T, function (t) h_t(pi_s, pi_r, pi_g, G = G, t = t))
+  # rows are groups, columns are periods:
+  helped_rates <- vapply(h_ts, colMeans, FUN.VALUE = numeric(G))
+  
+  total_payoffs <- matrix(0, 3, G)
+  
+  for (t in 1:T) {
+    payoffs <- matrix(b * helped_rates[, t], 3, G, byrow = TRUE)
+    # an s-type never pays to help
+    # a r-type in group i pays the mean of h^{ki}_{t-1} 
+    # (this gives the probability he was helped by the random "last person" who 
+    # targeted him in the last round)
+    # in round 1 r-types always help (in the code we pretend they "were helped" in round 0)
+    helped_rates_prev <- if (t > 1) helped_rates[, t - 1] else rep(1, G)
+    payoffs[2, ] <- payoffs[2, ] - 1 * helped_rates_prev
+    # a g-type in group i pays also the mean of h^{ki}_{t-1}
+    # (for each k, he helps if the k-person helped him i.e. with prob h^{ki}_{t-1})
+    payoffs[3, ] <- payoffs[3, ] - 1 * helped_rates_prev
+    if (! is.null(just_t) && t == just_t) return(payoffs)
+    total_payoffs <- total_payoffs + payoffs/T
+  }
+  
+  if (! invaders) {
+    total_payoffs[1, pi_s == 0] <- NA_real_
+    total_payoffs[2, pi_r == 0] <- NA_real_
+    total_payoffs[3, pi_g == 0] <- NA_real_
+  }
+  rownames(total_payoffs) <- c("s-type", "r-type", "g-type")
+  
+  return(total_payoffs)
+}
+
+```
+
+```{r h_t_examples, eval = FALSE}
+G <- 3L
+
+# if all groups have equal selfish types, g and r types behave the same:
+pi_s <- c(0.1, 0.1, 0.1)
+pi_r <- c(0.9, 0.0, 0.0)
+pi_g <- c(0.0, 0.9, 0.9)
+h_t(pi_s, pi_r, pi_g, G = G, t = 3)
+total_payoffs(pi_s, pi_r, pi_g, T = 3)
+# group 1 and 3 have 0.1 selfish, group 2 has more
+# rest of groups 2 and 3 are g-types, rest of 1 is r-types
+G <- 3
+pi_s <- c(0.1, 0.3, 0.1)
+pi_r <- c(0.9, 0.0, 0.0)
+pi_g <- c(0.0, 0.7, 0.9)
+# group 1 helps everyone equally. groups 2 and 3 discriminate against group 2
+h_t(pi_s, pi_r, pi_g, G = G, t = 5)
+total_payoffs(pi_s, pi_r, pi_g, T = 5)
+plot_helping(pi_s, pi_r, pi_g, T = 20)
+
+# group 1 is selfish. Groups 2 and 3 have 0.1 selfish, rest r- or g-types respectively
+pi_s <- c(1.0, 0.1, 0.1)
+pi_r <- c(0.0, 0.0, 0.9)
+pi_g <- c(0.0, 0.9, 0.0)
+# group 1 helps everyone equally. groups 2 and 3 discriminate against group 2
+h_t(pi_s, pi_r, pi_g, G = G, t = 5)
+total_payoffs(pi_s, pi_r, pi_g, T = 5)
+
+# group 1 is all selfish
+# group 2 is mostly r-types
+# groups 3-4 are mostly g-types
+G <- 4
+pi_s <- c(1.0, 0.1, 0.1, 0.1)
+pi_r <- c(0, 0.9, 0, 0)
+pi_g <- c(0, 0, 0.9, 0.9)
+# group 2 ends up helping everybody equally, but very little;
+# groups 3 and 4 still help each other substantially by t = 10
+(h10 <- h_t(pi_s, pi_r, pi_g, G = G, t = 10L))
+# rate each group helps
+rowMeans(h10)
+# rate each group is heped
+colMeans(h10)
+
+# when T gets large, only pure g-groups get positive payoffs, which approach
+# |X|/G * (b-1)
+# here, groups 4 and 5. Groups 1-2 are almost pure r/g groups, group 3 is a pure r-group
+G <- 5
+pi_s <- c(0.1, 0.1, 0.0, 0.0, 0.0)
+pi_r <- c(0.9, 0.0, 1.0, 0.0, 0.0)
+pi_g <- c(0.0, 0.9, 0.0, 1.0, 1.0)
+total_payoffs(pi_s, pi_r, pi_g, b = 2, T = 1000)
+```
+
+## Evolution of strategies
+
+At the end of a generation, fitness is calculated according to payoffs and there
+is a selection process....
+
+
+# Extensions/ideas
+
+* Institutional evolution - i.e. the "types" exist at group level only, avoiding
+any within-group heterogeneity.
+* Intra-group public goods
+* Direct reciprocity types
+* Doing the maths for finite $T$
+* (Re)doing the simulations for finite $T$
+* The "blood feud" institution in e.g. Boehm suggests there is a deterrent
+  effect - if I plan to harm another clan, my cousins may dissuade me. Selfish
+  types could be (slightly) strategic, e.g. only harming if there is not too
+  much "comeback" in the following period.
+
+# Simulations
+
+# Conclusion
