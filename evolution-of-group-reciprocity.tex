@@ -105,10 +105,13 @@ the group size above which the group splits/establishes new groups{]}
 A single generation consists of \(T\) periods. In every period, each
 individual ``acts'' against one randomly selected member (the
 ``target'') from \emph{each} group. That is, let \(P\) be the set of
-permutations \((p_1, ..., p_N)\) of \((1, ..., N)\) such that
-\(p_i \ne i\) for all \(i\). For each pair of groups \(i, j\), a
-permutation \(p\) is drawn from the uniform distribution on \(P\).
-Player \(m\) of group \(i\) acts against player \(p_m\) of group \(j\).
+permutations \((p_1, ..., p_{N!})\) of \((1, ..., N)\),
+and consider the subset of permutations $P'\subset P$ that satisfy
+\(p \in P' \Longleftrightarrow p[k] \ne k\) for all \(k \in (1, ..., N)\). 
+In words, the permutations in $P'$ are those where the first element is different than $1$, the second element is different than $2$, and so on.
+For each pair of groups \(i, j\), a
+permutation \(p\) is drawn from the uniform distribution on \(P'\).
+Player \(m\) of group \(i\) acts against player \(p[m] \ne m\) of group \(j\).
 Thus each player acts against one member of each group, and is the
 target of one member from each group.
 
