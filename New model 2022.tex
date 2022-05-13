@@ -1,0 +1,174 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath}
+
+\begin{document}
+\global\long\def\bpi{\bar{p}}%
+\global\long\def\upi{\underline{p}}%
+
+
+\section{Introduction}
+
+* Some p
+\section{Model}
+
+A proportion~$p$ of the population is group reciprocators. Individuals are randomly assorted into a large number groups of size $G$.
+Let~$p_g$ be the proportion of GR in group~$g$, which is distributed binomially.
+
+At every step~$t$, everybody interacts with everybody. Selfish always defect, A GR individual~$i$ starts by cooperating, and then cooperates with
+probability~$\phi_{ik}(l)$, where~$l$ is the proportion of times that
+individuals from group~$k$ cooperated with individual~$i$ in round $t-1$.
+$\phi(\cdot)$ is monotonically weakly increasing. Examples: proportional
+(not going to work); cutoff (cooperate iff~$\phi_{i}(l)>k$. The fitness is
+the payoff at the limit where~$t\to\infty$. Equivalently, since the game
+always settles to a stationary action profile, it is the average payoff 
+of $T$ rounds when $T\to\infty$.
+
+Given this behaviour, group reciprocators in all groups where $p_g \ge k$
+will help all individuals in other groups where $p_g \ge g$. Group reciprocators
+in other groups do not help (since they are not helped).
+
+Individuals' fitness therefore depends only on whether they are in a "supraliminal" group with $p_g \ge k$, and on their type. Let $q$ be the 
+proportion of supraliminal groups. Let $\bpi$ be the proportion of 
+cooperators in supraliminal groups (out of the total population in such groups).
+Let $\upi$ be the proportion of cooperators in subliminal groups
+(out of the total population in such groups).
+
+Group reciprocators in supraliminal groups get a payoff $1 + \bpi qb - qc$.
+
+Selfish types in supraliminal groups get $1 + \bpi qb$.
+
+Group reciprocators and selfish types in subliminal groups get $1$.
+
+After each generation, reproductive success is proportional to fitness,
+the total population size stays the same, and children are 
+remixed randomly into new groups of the same size.
+
+The contributions to the new population are:
+
+Cooperators in supraliminal groups: $\pi_1 = \bpi q(1 + \bpi qb - qc)$.
+
+Selfish types in supraliminal groups: $\pi_2 = (1-\bpi)q(1 + \bpi qb)$.
+
+Cooperators in subliminal groups: $\pi_3 = \upi(1-q)$.
+
+Selfish types in subliminal groups: $\pi_4 = (1-\upi)(1-q)$.
+
+And the overall proportion of cooperators in the new generation is
+
+\begin{equation}
+p' = \frac{\pi_1 + \pi_3}{\pi_1 + \pi_2 + \pi_3 + \pi_4}
+\end{equation}
+
+From $p'$ and $G$ we can calculate $q$, $\bpi$ and $\upi$ for the new generation.
+
+Actually, we only need calculate the relative fitness of reciprocators and selfish types. If we renormalize the basic fitness to 0, the mean fitness
+of reciprocators is
+
+\[
+\frac{
+  \bpi q(q(\bpi b - c))
+}{
+  p
+}
+\]
+
+and the mean fitness of selfish types is
+
+\[
+\frac{
+  (1 - \bpi)q(q\bpi b)
+}{
+  1 - p
+}
+\]
+
+After rearranging, the mean fitness of reciprocators is higher if
+
+
+\begin{equation}
+\label{gr-wins}
+\frac{ \bpi - p}{ 1 - p} \ge \frac{c}{b}.
+\end{equation}
+
+where 
+
+\[
+\bpi = E[p_g | p_g \ge k] = \frac{1}{G} \frac{\sum_{l=kG}^G l \mathrm{Binom}(l,G,p)}{\sum_{l=kG}^G \mathrm{Binom}(l,G,p)}
+\]
+
+It turns out that \eqref{gr-wins} is decreasing in $p$ and is equal
+to the threshold $k$ when $p = 0$. (Not sure why yet.)
+
+As a result, there is a unique ESS with a positive share of group
+reciprocators
+if and only if $k > \frac{c}{b}$. Otherwise the unique ESS has everyone being selfish.
+
+
+\subsection*{Proof that \eqref{gr-wins} goes to $k$ as $p \to 0$}
+
+
+Consider
+
+\[
+\frac{\bpi - p}{1-p}
+\]
+The limit as $p \to 0$ is given by $\bpi$. For $k=0$ this is
+0 since $\bpi = p$. For $k>0$, write
+\[
+\bpi=\frac{1}{G}\frac{\sum_{l=kG}^{G}l\phi(l,G,p)}{\sum_{l=kG}^{G}\phi(l,G,p)}=\frac{\sum_{l=kG}^{G}l\binom{G}{l}p^{l}(1-p)^{G-l}}{\sum_{l=kG}^{G}\binom{G}{l}p^{l}(1-p)^{G-l}}.
+\]
+
+The limit of this is given by L'H\^{o}pital's rule, since the denominator
+goes to zero. Differentiating top and bottom gives
+\[
+\frac{1}{G}\frac{\sum_{l=kG}^{G}l\binom{G}{l}(l-Gp)p^{l-1}(1-p)^{G-l-1}}{\sum_{l=kG}^{G}\binom{G}{l}(l-Gp)p^{l-1}(1-p)^{G-l-1}}
+\]
+so we have to apply the rule again. Continuing thus we eventually hit:
+\[
+\frac{1}{G}\frac{kG\binom{G}{l}(l-Gp)(l-1-Gp)(\cdots)(l-kG-Gp)p^{0}(1-p)^{G-2kG}+\cdots}{\binom{G}{l}(l-Gp)(l-1-Gp)(\cdots)(l-kG-Gp)p^{0}(1-p)^{G-2kG}+\cdots}
+\]
+ where all but the first terms vanish, leaving
+\[
+\frac{1}{G}\frac{kG\binom{G}{l}(l-Gp)(l-1-Gp)(\cdots)(l-kG-Gp)p^{0}(1-p)^{G-2kG}}{\binom{G}{l}(l-Gp)(l-1-Gp)(\cdots)(l-kG-Gp)p^{0}(1-p)^{G-2kG}}=\frac{1}{G}kG=k.
+\]
+
+
+(Old stuff)
+
+\begin{align}
+    q & = & 1 - CDF(G, p') \\
+    \bpi & = & E[p_k | p_k \ge c] \\
+    \upi & = & E[p_k | p_k < c]
+\end{align}
+
+Where $CDF$ is the binomial distribution of $p'$ out of $G$ successes, and
+the conditional expectations are also taken according to this distribution.
+
+Computations are in continuous-model-computations.R in dropbox. Plotting
+reveals:
+
+When $p$ is sufficiently below $c$, $p' = p$ and group reciprocity is 
+selectively neutral, since group reciprocators and selfish types are
+almost all in subliminal groups.
+
+For some parameters, and intermediate values of $p$, $p'>p$ so that
+group reciprocity is being selected for. That is, some groups successfully
+manage to cooperate with other groups and have higher average fitness.
+
+For high enough values of $p$, $p' < p$. This is because when almost everyone
+is cooperating, a selfish type is almost surely in a supraliminal group
+and benefits by freeriding.
+
+Conjectures and questions.
+
+1. What if the threshold can evolve? Might higher thresholds always 
+be beneficial? If so, probably only few group reciprocators exist,
+and very few are in supraliminal groups. One way to do this is
+generalize the model to have high- and low-threshold types, and see
+who wins. Note that in the model as is, a selfish type just has a
+"threshold" of above 1. Another approach is to ask if a single
+person with a different threshold can invade. He will change the
+behaviour of other groups to him, but as there are many groups,
+we can ignore the effects on other people's fitness and just
+ask if he outcompetes other group reciprocators.
+\end{document}
