@@ -32,7 +32,7 @@ for (G in 1:max_G) for (R in 1:G) {
     ends   <- lhs_vals[lhs_increasing + 1]
     p_starts <- ps[lhs_increasing]
     p_ends   <- ps[lhs_increasing + 1]
-    stop("LHS not increasing between these values:\n", 
+    stop("LHS of (2) was not increasing between these values:\n", 
            sprintf("p = %s (LHS = %s) and p = %s (LHS = %s)", p_starts, starts, 
                      p_ends, ends)
          )
