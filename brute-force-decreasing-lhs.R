@@ -26,13 +26,13 @@ for (G in 1:max_G) for (R in 1:G) {
   k <- R/G
   lhs_vals <- lhs(ps, k = k, G = G)
   diff_lhs <- diff(lhs_vals)
-  lhs_increasing <- diff_lhs > 0
+  lhs_increasing <- diff_lhs >= 0
   if (any(lhs_increasing)) {
     starts <- lhs_vals[lhs_increasing]
     ends   <- lhs_vals[lhs_increasing + 1]
     p_starts <- ps[lhs_increasing]
     p_ends   <- ps[lhs_increasing + 1]
-    stop("LHS of (2) was not increasing between these values:\n", 
+    stop("LHS of (2) was not decreasing between these values:\n", 
            sprintf("p = %s (LHS = %s) and p = %s (LHS = %s)", p_starts, starts, 
                      p_ends, ends)
          )
