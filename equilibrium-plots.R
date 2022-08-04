@@ -4,13 +4,13 @@
 # == functions ====
 # 
 pbar <- function (p, k, G) {
-  1/G * sum(
-          dbinom((k*G):G, G, p) * (k*G):G
-        ) /
-        sum(
-          dbinom((k*G):G, G, p)
-        )
+  binoms <- dbinom((k*G):G, G, p)
+  # for low probabilities and high G, this gets to 0 and we 
+  # then divide by zero
+  if (p > 0 && p < 1) binoms <- pmax(binoms, .Machine$double.eps)
+  1/G * sum(binoms * (k*G):G) / sum(binoms)
 }
+
 pbar <- Vectorize(pbar)
 
 lhs <- function (p, k, G) {
@@ -29,7 +29,7 @@ equilibrium_p <- function (k, G, c, b) {
   uniroot_result$root
 }
 
-equilibrium_p(k = 0.8, G = 10, c = 1, b = 2)
+# equilibrium_p(k = 0.8, G = 10, c = 1, b = 2)
 
 # == ggplot version ====
 
@@ -80,20 +80,26 @@ rgl::snapshot3d("eqm3d.png")
 # == heatmap version ====
 
 library(ggplot2)
+
 plot_eqm_3d <- function (k, b, G) {
   k <- round(2 * k, 1) /2
-  Vectorize(equilibrium_p)(k = k, G = 20, c = 1, b = b)
+  Vectorize(equilibrium_p)(k = k, G = G, c = 1, b = b)
 }
 
-for (G in c(20, 100, 200)) {
-  df <- expand.grid(k = seq(0.05, 0.95, 0.05), b = 1:10)
-  df$p <- purrr::map2_dbl(df$k, df$b, plot_eqm_3d, G = G)
-  ggp <- ggplot(df, aes(x = k, y = b, fill = p)) + geom_tile() + theme_minimal() + 
-           scale_fill_viridis_c() +
-           scale_x_continuous(breaks = seq(0.1, 0.9, 0.1)) +
-           scale_y_continuous(breaks = 1:10) +
-           labs(x = "Reciprocation threshold (k)", y = "Benefit/cost (b/c)",
-                  title = "Equilibrium proportion of reciprocators", 
-                  subtitle = sprintf("G = %s", G))
-  ggsave(sprintf("heatmap-G-%s.jpeg", G), plot = ggp, bg = "white")
-}
+df <- expand.grid(k = seq(0.05, 0.95, 0.05), b = seq(1, 10, 0.25), G = c(20, 100, 200))
+df$p <- purrr::pmap_dbl(df, plot_eqm_3d)
+df$p[df$p == 0] <- NA_real_
+ggplot(df, aes(x = k, y = b, fill = p)) + 
+   geom_tile() + 
+   scale_fill_viridis_c() +
+   scale_x_continuous(breaks = seq(0.1, 0.9, 0.1)) +
+   scale_y_continuous(breaks = 1:10) +
+   facet_wrap(vars(G), labeller = label_both) +
+   labs(x = "Reciprocation threshold (k)", y = "Benefit/cost (b/c)",
+          title = "Equilibrium proportion of reciprocators") +
+   theme_minimal() + 
+   theme(axis.text.x = element_text(size = 8))
+
+ggsave("heatmap.jpeg", bg = "white", width = 7, height = 5)
+
+
