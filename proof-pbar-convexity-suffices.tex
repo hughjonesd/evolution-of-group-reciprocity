@@ -1,0 +1,53 @@
+%% LyX 2.3.6.2 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[english]{article}
+\usepackage{mathptmx}
+\usepackage[T1]{fontenc}
+\usepackage[latin9]{inputenc}
+\usepackage{amsmath}
+\usepackage{babel}
+\begin{document}
+\textbf{Claim}. 
+
+Write $P(p)\equiv\bar{p}(p)$ so I can type fast.
+
+Suppose $P(p)$ is increasing from $P(0)=k\in(0,1)$ to $P(1)=1$.
+Then on $(0,1)$:
+
+\[
+LHS(p)\equiv\frac{P(p)-p}{1-p}\textrm{ is decreasing in }p\textrm{ if }P(p)\textrm{ is strictly convex.}
+\]
+Proof.
+
+$P(p)$ is convex on $(0,1)$ if and only if for all $0<p_{1}<p_{2}<1$
+and $a\in(0,1)$,
+\[
+P(ap_{1}+(1-a)p_{2})<aP(p_{1})+(1-a)P(p_{2}).
+\]
+
+For arbitrary $p_{1}$ and $a\in(0,1)$, take $p_{2}=1$ and write
+$p_{3}=ap_{1}+(1-a)$. 
+
+Now write $q=aP(p_{1})+(1-a),$i.e., $q$ is the point on the line
+segment between $P(p_{1})$ and 1. Then
+\begin{align*}
+ & \frac{q-p_{3}}{1-p_{3}}\\
+= & \frac{aP(p_{1})+(1-a)-[ap_{1}+(1-a)]}{1-[ap_{1}+(1-a)]}\\
+= & \frac{aP(p_{1})-ap_{1}}{a(1-p_{1})}\\
+= & \frac{P(p_{1})-p_{1}}{1-p_{1}}.
+\end{align*}
+Last, observe that by convexity of $P$, 
+\begin{align*}
+P(p_{3}) & <aP(p_{1})+(1-a)P(p_{2})\\
+ & =aP(p_{1})+(1-a)P(1)\\
+ & =aP(p_{1})+(1-a)\\
+ & =q.
+\end{align*}
+
+Putting these together
+\[
+\frac{P(p_{3})-p_{3}}{1-p_{3}}<\frac{P(p_{1})-p_{1}}{1-p_{1}}
+\]
+and because $p_{1}$ and $p_{3}>p_{1}$ were arbitrary we have proved
+that $LHS(p)$ is decreasing.
+\end{document}
