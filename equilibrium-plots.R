@@ -84,11 +84,11 @@ rgl::snapshot3d("eqm3d.png")
 library(ggplot2)
 
 plot_eqm_3d <- function (k, b, G) {
-  k <- round(2 * k,1) / 2
+#  k <- round(2 * k,1) / 2
   Vectorize(equilibrium_p)(k = k, G = G, c = 1, b = b)
 }
 
-df <- expand.grid(k = seq(0.05, 0.95, 0.05), b = seq(1, 10, 0.01), G = c(10, 20, 100))
+df <- expand.grid(k = seq(0.01, 0.99, 0.01), b = seq(1, 10, 0.01), G = c(10, 20, 1000))
 df$p <- purrr::pmap_dbl(df, plot_eqm_3d)
 #df$p[df$p == 0] <- NA_real_
 heatmap <- ggplot(df, aes(x = k, y = b, fill = p)) + 
