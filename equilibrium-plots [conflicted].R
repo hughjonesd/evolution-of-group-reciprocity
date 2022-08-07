@@ -4,7 +4,6 @@
 # == functions ====
 # 
 pbar <- function (p, k, G) {
-  k <- ceiling(k * G) / G
   binoms <- dbinom((k*G):G, G, p)
   # for low probabilities and high G, this gets to 0 and we 
   # then divide by zero
@@ -23,11 +22,11 @@ rel_fitness <- function (p, k, G, c, b) {
 }
 
 equilibrium_p <- function (k, G, c, b) {
-  if (rel_fitness(p = 1e-10, k = k, G = G, c = c, b = b) < 0) return(0)
-  if (rel_fitness(p = 1-1e-10, k = k, G = G, c = c, b = b) > 0) return(1)
+  if (rel_fitness(p = 1e-4, k = k, G = G, c = c, b = b) < 0) return(0)
+  if (rel_fitness(p = 1-1e-4, k = k, G = G, c = c, b = b) > 0) return(1)
   
   rel_fitness_here <- function (p) rel_fitness(p = p, k = k, G = G, c = c, b = b)
-  uniroot_result <- uniroot(rel_fitness_here, interval = c(1e-10, 1 - 1e-10))
+  uniroot_result <- uniroot(rel_fitness_here, interval = c(1e-4, 1 - 1e-4))
   uniroot_result$root
 }
 
@@ -84,14 +83,14 @@ rgl::snapshot3d("eqm3d.png")
 library(ggplot2)
 
 plot_eqm_3d <- function (k, b, G) {
-#  k <- round(2 * k,1) / 2
+  k <- round(10 * k, 1) / 10
   Vectorize(equilibrium_p)(k = k, G = G, c = 1, b = b)
 }
 
-df <- expand.grid(k = seq(0.01, 0.99, 0.01), b = seq(1, 10, 0.01), G = c(10, 20, 1000))
+df <- expand.grid(k = seq(0.01, 0.99, 0.01), b = seq(1, 10, 0.1), G = c(20, 100, 1000))
 df$p <- purrr::pmap_dbl(df, plot_eqm_3d)
 #df$p[df$p == 0] <- NA_real_
-heatmap <- ggplot(df, aes(x = k, y = b, fill = p)) + 
+ggplot(df, aes(x = k, y = b, fill = p)) + 
    geom_raster() + 
    scale_fill_viridis_c() +
    scale_x_continuous(breaks = seq(0.1, 0.9, 0.1)) +
@@ -99,9 +98,7 @@ heatmap <- ggplot(df, aes(x = k, y = b, fill = p)) +
    facet_wrap(vars(G), labeller = label_both) +
    labs(x = "Reciprocation threshold (k)", y = "Benefit/cost (b/c)") +
    theme_minimal() + 
-   theme(axis.text.x = element_text(size = 8)) + 
-   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
-heatmap
+   theme(axis.text.x = element_text(size = 8))
 
 ggsave("heatmap.pdf", bg = "white", width = 10, height = 5)
 
