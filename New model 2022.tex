@@ -27,24 +27,24 @@
 \global\long\def\upi{\underline{p}}%
 
 
-\section{Introduction}
+%\section{Introduction}
 
-* Some p
+%* Some p
 \section{Model}
 
 We consider a mixed population of two types, selfish and group reciprocators (GR). At the beginning of each generation, the population randomly divides into a large number of groups of size~$G$ each.
 Let~$p$ denote the population share of GR types. 
 Let~$p_g$ be the proportion of GR in group~$g$, which is distributed binomially.
 
-At every step~$t$, everybody interacts with everybody. In each pair, each individual receives one unit and chooses between cooperation and defection. Cooperation entails a cost~$c$ to the cooperator and a benefit~$b$ to her partner. Defection carries no costs. That is, each pair plays the following Prisoner's Dilemma game:
+At every step~$t$, everybody interacts with everybody. In each pair, each individual chooses between cooperation and defection. Cooperation entails a cost~$c$ to the cooperator and a benefit~$b$ to her partner. Defection carries no costs. That is, each pair plays the following Prisoner's Dilemma game:
 \begin{center}
     \begin{tabularx}{0.5\textwidth}{|x|x|x|}
         \hline
         &   Cooperate   &   Defect  \\
         \hline
-        Cooperate   &   $1+b-c$   &   $1-c$    \\
+        Cooperate   &   $b-c$   &   $-c$    \\
         \hline
-        Defect  &   $1+b$ &   1   \\
+        Defect  &   $b$ &   $0$   \\
         \hline
     \end{tabularx}
 \end{center}
@@ -60,58 +60,38 @@ $$
 $$
 The fitness is the payoff at the limit where~$t\to\infty$. Equivalently, since the game always settles to a stationary action profile, it is the average payoff of~$T$ rounds when~$T\to\infty$.
 
-Given this behaviour, GR in all groups where $p_g \geq k$
-help all individuals in other groups where $p_g \geq k$ and defect against members of all other groups. GR in other groups always defect.
+Given this behaviour, GR in all groups where $p_g \geq k$ help all individuals in other groups where $p_g \geq k$ and defect against members of all other groups. GR in other groups always defect.
 %
-Individuals' fitness therefore depends only on whether they are in a ``supraliminal" group with $p_g \ge k$, and on their type. Let~$q$ be the 
+Individuals' fitness therefore depends only on whether they are in a ``supraliminal" group with $p_g \geq k$, and on their type. Let~$q$ be the 
 proportion of supraliminal groups. Let~$\bpi$ be the proportion of 
-cooperators in supraliminal groups (out of the total population in such groups). Let~$\upi$ be the proportion of cooperators in subliminal groups
-(out of the total population in such groups). It follows that
+GR individuals in supraliminal groups (out of the total population in such groups). Let~$\upi$ be the proportion of GR individuals in subliminal groups (out of the total population in such groups). It follows that
 \begin{itemize}
-    \item Group reciprocators in supraliminal groups get a payoff of~$1 + \bpi qb - qc$.
-    \item Selfish types in supraliminal groups get~$1 + \bpi qb$.
-    \item Group reciprocators and selfish types in subliminal groups get~$1$.
+    \item Group reciprocators in supraliminal groups get a payoff of~$\bpi qb - qc$.
+    \item Selfish types in supraliminal groups get~$\bpi qb$.
+    \item Group reciprocators and selfish types in subliminal groups get~$0$.
 \end{itemize}
 
-After each generation, reproductive success is proportional to fitness,
-the total population size stays the same, and children are 
-remixed randomly into new groups of the same size.
+After each generation, reproductive success is proportional to fitness, the total population size stays the same, and children are remixed randomly into new groups of the same size.
+%
+The mean fitness of the GR type is
 
-The contributions to the new population are:
-\begin{itemize}
-    \item Cooperators in supraliminal groups: $\pi_1 = \bpi q(1 + \bpi qb - qc)$.
-    \item Selfish types in supraliminal groups: $\pi_2 = (1-\bpi)q(1 + \bpi qb)$.
-    \item Cooperators in subliminal groups: $\pi_3 = \upi(1-q)$.
-    \item Selfish types in subliminal groups: $\pi_4 = (1-\upi)(1-q)$.
-\end{itemize}
-And the overall proportion of cooperators in the new generation is
-
-\begin{equation}
-p' = \frac{\pi_1 + \pi_3}{\pi_1 + \pi_2 + \pi_3 + \pi_4}
-\end{equation}
-
-From $p'$ and $G$ we can calculate $q$, $\bpi$ and $\upi$ for the new generation.
-
-Actually, we only need to calculate the relative fitness of reciprocators and selfish types. If we renormalize the basic fitness to 0, the mean fitness
-of reciprocators is
-
-\[
+\begin{equation*}
 \frac{
   \bpi q(q(\bpi b - c))
 }{
   p
 }
-\]
+\end{equation*}
 
 and the mean fitness of selfish types is
 
-\[
+\begin{equation*}
 \frac{
   (1 - \bpi)q(q\bpi b)
 }{
   1 - p
 }
-\]
+\end{equation*}
 
 After rearranging, the mean fitness of reciprocators is higher if
 
@@ -127,13 +107,16 @@ where
 \bpi = E[p_g | p_g \ge k] = \frac{1}{G} \frac{\sum_{l=kG}^G l \mathrm{Binom}(l,G,p)}{\sum_{l=kG}^G \mathrm{Binom}(l,G,p)}
 \]
 
-It turns out that \eqref{gr-wins} is decreasing in $p$ and is equal
-to the threshold $k$ when $p = 0$. (Not sure why yet.)
+The LHS of \eqref{gr-wins} is decreasing in $p$ and is equal
+to the threshold $k$ when $p = 0$.\footnote{
+    When the share of GR in the population is very small, the probability that$p_g = k$ conditional on~$p_g\geq k$ goes to one.
+}
+%
+It follows that there is a unique ESS with a positive share of group
+reciprocators if and only if $k > \frac{c}{b}$. Otherwise the population is homogeneously selfish in the unique ESS.
 
-As a result, there is a unique ESS with a positive share of group
-reciprocators
-if and only if $k > \frac{c}{b}$. Otherwise the unique ESS has everyone being selfish.
-
+\end{document}
+%%% THE REST OF THE ATTEMPTS TO PROVE ARE IN THE SEPARATE FILE
 
 \subsection*{Proof that \eqref{gr-wins} goes to $k$ as $p \to 0$}
 
