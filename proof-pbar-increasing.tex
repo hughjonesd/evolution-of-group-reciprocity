@@ -1,0 +1,58 @@
+%% LyX 2.3.6.2 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[english]{article}
+\usepackage{mathptmx}
+\usepackage[T1]{fontenc}
+\usepackage[latin9]{inputenc}
+\usepackage{amsmath}
+\usepackage{babel}
+\begin{document}
+\global\long\def\bpi{\bar{p}}%
+Write
+\[
+\bpi=\frac{1}{G}\frac{\sum_{l=kG}^{G}l\phi(l,G,p)}{\sum_{l=kG}^{G}\phi(l,G,p)}=\frac{1}{G}\frac{\sum_{l=kG}^{G}l\phi(l,G,p)}{P}
+\]
+where 
+\[
+\phi(l,G,p)=\binom{G}{l}p^{l}(1-p)^{G-l}
+\]
+is the binomial distribution of the number of group reciprocators
+in a group, and $P$ is the probability that $p_{g}>k$.
+
+Let's write the binomial as $\phi(l)$ for short. Differentiating
+it with respect to $p$ reveals
+\[
+\phi'(l)=\frac{l-Gp}{p(1-p)}\phi(l).
+\]
+Writing $\sum\phi$ as short for $\sum_{l=kG}^{G}\phi(l)$, et cetera,
+we differentiate $\bpi$:
+\begin{align*}
+\bpi' & =\frac{1}{G}\frac{1}{P^{2}}\left(\left[\sum\phi\right]\left[\frac{1}{p(1-p)}\sum l(l-Gp)\phi\right]-\left[\sum l\phi\right]\frac{1}{p(1-p)}\left[\sum(l-Gp)\phi\right]\right)\\
+ & =\frac{1}{G}\frac{1}{P^{2}}\frac{1}{p(1-p)}\left(\left[\sum\phi\right]\left[\sum l(l-Gp)\phi\right]-\left[\sum l\phi\right]\left[\sum(l-Gp)\phi\right]\right)\\
+ & =\frac{1}{G}\frac{1}{P^{2}}\frac{1}{p(1-p)}\left(\left[\sum\phi\right]\sum l^{2}\phi-\left[\sum\phi\right]Gp\sum l\phi-\left[\sum l\phi\right]^{2}+\left[\sum l\phi\right]\left[\sum\phi\right]Gp\right)\\
+ & =\frac{1}{G}\frac{1}{P^{2}}\frac{1}{p(1-p)}\left(\left[\sum\phi\right]\left[\sum l^{2}\phi\right]-\left[\sum l\phi\right]^{2}\right)
+\end{align*}
+This is signed by the final term. Multiplying out the sums gives
+\begin{align*}
+ & \left[\sum\phi(l)\right]\left[\sum l^{2}\phi(l)\right]-\left[\sum l\phi(l)\right]^{2}\\
+= & \left[\sum l^{2}\phi(l)\right]\left[\sum\phi(l)\right]-\left[\sum l\phi(l)\right]\left[\sum l\phi(l)\right]\\
+= & \left[R^{2}\phi(R)+(R+1)^{2}\phi(R+1)+...+G^{2}\phi(G)\right]\left[\phi(R)+...+\phi(G)\right]-\\
+ & \left[R\phi(R)+(R+1)\phi(R+1)+...+G\phi(G)\right]\left[R\phi(R)+(R+1)\phi(R+1)+...+G\phi(G)\right]\\
+ & \textrm{where I wrote }R=kG;\\
+= & \sum_{l=R}^{G}\sum_{m=R}^{G}l^{2}\phi(l)\phi(m)-\sum_{l=R}^{G}\sum_{m=R}^{G}lm\phi(l)\phi(m)\\
+= & \sum_{l=R}^{G}\sum_{m=R}^{G}l(l-m)\phi(l)\phi(m).
+\end{align*}
+Now observe that the terms in this sum equal zero whenever $l=m$.
+When $l\ne m$, we can put the terms in pairs: 
+\begin{align*}
+ & l(l-m)\phi(l)\phi(m)+m(m-l)\phi(l)\phi(m)\\
+ & =[l^{2}+m^{2}-2ml]\phi(l)\phi(m)\\
+ & =[l-m]^{2}\phi(l)\phi(m)
+\end{align*}
+
+Thus we can rewrite the double sum as 
+\[
+\sum_{l=R}^{G}\sum_{m=l+1}^{G}[l-m]^{2}\phi(l)\phi(m)
+\]
+which is positive.
+\end{document}
