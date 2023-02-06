@@ -122,9 +122,9 @@ Let's write the binomial as
 
  reveals
 \begin_inset Formula 
-\[
-\phi'(l)=\frac{l-Gp}{p(1-p)}\phi(l).
-\]
+\begin{equation}
+\phi'(l)=\frac{l-Gp}{p(1-p)}\phi(l).\label{eq:phi-prime}
+\end{equation}
 
 \end_inset
 
@@ -198,6 +198,245 @@ Thus we can rewrite the double sum as
 \end_inset
 
 which is positive.
+\end_layout
+
+\begin_layout Subsection*
+Convexity
+\end_layout
+
+\begin_layout Standard
+This bit doesn't work yet...
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+Writing 
+\begin_inset Formula 
+\[
+\bpi'=\frac{1}{G}\frac{\sum_{l=R}^{G}\sum_{m=l+1}^{G}[l-m]^{2}\phi(l)\phi(m)}{P^{2}p(1-p)}
+\]
+
+\end_inset
+
+we can sign 
+\begin_inset Formula $\bpi''$
+\end_inset
+
+ by 
+\begin_inset Quotes eld
+\end_inset
+
+
+\begin_inset Formula $f'g-fg'$
+\end_inset
+
+
+\begin_inset Quotes erd
+\end_inset
+
+ where 
+\begin_inset Formula $f=\sum_{l=R}^{G}\sum_{m=l+1}^{G}[l-m]^{2}\phi(l)\phi(m)$
+\end_inset
+
+ and 
+\begin_inset Formula $g=P^{2}p(1-p)$
+\end_inset
+
+.
+ Calculating the derivatives using (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:phi-prime"
+
+\end_inset
+
+) and 
+\begin_inset Formula $P=\sum\phi$
+\end_inset
+
+ gives 
+\begin_inset Formula 
+\begin{align*}
+f' & =\sum_{l=R}^{G}\sum_{m=l+1}^{G}[l-m]^{2}\frac{l+m-2Gp}{p(1-p)}\phi(l)\phi(m)\text{, and}\\
+g' & =(1-2p)[\sum\phi]^{2}+p(1-p)2\sum\phi\sum\frac{l-Gp}{p(1-p)}\phi\\
+ & =(1-2p)\left[\sum\phi\right]^{2}+2\sum\phi\left[\sum(l-Gp)\phi\right]\\
+ & =\sum\phi\left((1-2p)\sum\phi+2\left[\sum(l-Gp)\phi\right]\right)\\
+ & =\sum\phi\left((1-2p)\sum\phi+2\left[\sum l\phi-Gp\sum\phi\right]\right)\\
+ & =\sum\phi\left((1-2p-2Gp)\sum\phi+2\sum l\phi\right).
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+Then
+\begin_inset Formula 
+\begin{align*}
+f'g= & \left(\sum_{l=R}^{G}\sum_{m=l+1}^{G}[l-m]^{2}\frac{l+m-2Gp}{p(1-p)}\phi(l)\phi(m)\right)\left[\sum\phi\right]^{2}p(1-p)\\
+= & \left(\sum_{l=R}^{G}\sum_{m=l+1}^{G}[l-m]^{2}[l+m-2Gp]\phi(l)\phi(m)\right)\left[\sum\phi\right]^{2}
+\end{align*}
+
+\end_inset
+
+and
+\begin_inset Formula 
+\[
+fg'=\left[\sum_{l=R}^{G}\sum_{m=l+1}^{G}[l-m]^{2}\phi(l)\phi(m)\right]\left[\sum\phi\right]\left[(1-2p-2Gp)\sum_{n=R}^{G}\phi(n)+2\sum_{n=R}^{G}n\phi(n)\right]
+\]
+
+\end_inset
+
+After dividing out common factors, 
+\begin_inset Formula $f'g-fg'$
+\end_inset
+
+ is signed by 
+\begin_inset Formula 
+\begin{align*}
+ & \left(\sum_{l=R}^{G}\sum_{m=l+1}^{G}[l-m]^{2}[l+m-2Gp]\phi(l)\phi(m)\right)\sum\phi\\
+ & -\sum_{l=R}^{G}\sum_{m=l+1}^{G}[l-m]^{2}\phi(l)\phi(m)\left[\left((1-2p-2Gp)\sum\phi+2\sum l\phi\right)\right]\\
+= & \sum_{l=R}^{G}\sum_{m=l+1}^{G}[l-m]^{2}\left([l+m-2Gp]\left[\sum_{n=R}^{G}\phi\right]-\left((1-2p-2Gp)\sum_{n=R}^{G}\phi(n)+2\sum_{n=R}^{G}n\phi(n)\right)\right)\phi(l)\phi(m)\\
+= & \sum_{l=R}^{G}\sum_{m=l+1}^{G}[l-m]^{2}\left([l+m-1+2p]\left[\sum_{n=R}^{G}\phi\right]-2\sum_{n=R}^{G}n\phi(n)\right)\phi(l)\phi(m)\\
+= & \sum_{l=R}^{G}\sum_{m=l+1}^{G}\sum_{n=R}^{G}[l-m]^{2}\left(l+m-1+2p-2n\right)\phi(l)\phi(m)\phi(n)
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+Let's do the same trick as before, a bit more formally this time.
+ Write this sum as 
+\begin_inset Formula 
+\[
+\sum_{l=R}^{G}\sum_{n=R}^{G}\xi(l,n)\phi(l)\phi(n)\textrm{ where }\xi(l,n)=\sum_{m=l+1}^{G}[l-m]^{2}\left(l+m-1+2p-2n\right)\phi(m)
+\]
+
+\end_inset
+
+and then rewrite it, gathering terms, as
+\begin_inset Formula 
+\[
+\sum_{l=R}^{G}\xi(l,l)\phi(l)\phi(l)+\sum_{l=R}^{G}\sum_{n=l+1}^{G}\left[\xi(l,n)+\xi(n,l)\right]\phi(l)\phi(n)
+\]
+
+\end_inset
+
+This becomes
+\begin_inset Formula 
+\begin{align*}
+\sum_{l=R}^{G}\sum_{m=l+1}^{G}[l-m]^{2}\left(m-l-1+2p\right)\phi(m)\phi(l)\phi(l)\\
++\sum_{l=R}^{G}\sum_{n=l+1}^{G}\sum_{m=l+1}^{G}[l-m]^{2}\left(l+m-1+2p-2n\right)\phi(m)\phi(l)\phi(n).
+\end{align*}
+
+\end_inset
+
+Let's try the same trick one more time, writing the second term as
+\begin_inset Formula 
+\begin{align*}
+\sum_{l=R}^{G}\sum_{n=l+1}^{G}\sum_{m=l+1}^{G}\zeta(l,m,n)\phi(l)\phi(m)\phi(n)\textrm{ where }\zeta(l,m,n) & =[l-m]^{2}\left(l+m-1+2p-2n\right)
+\end{align*}
+
+\end_inset
+
+which equals
+\begin_inset Formula 
+\[
+\sum_{l=R}^{G}\sum_{n=l+1}^{G}\zeta(l,n,n)\phi(l)\phi(n)\phi(n)+\sum_{l=R}^{G}\sum_{n=l+1}^{G}\sum_{m=n+1}^{G}\left[\zeta(l,m,n)+\zeta(l,n,m)\right]\phi(l)\phi(m)\phi(n)
+\]
+
+\end_inset
+
+which equals
+\begin_inset Formula 
+\begin{align*}
+ & \sum_{l=R}^{G}\sum_{n=l+1}^{G}[l-n]^{2}\left(l-n-1+2p\right)\phi(l)\phi(n)\phi(n)\\
+ & +\sum_{l=R}^{G}\sum_{n=l+1}^{G}\sum_{m=n+1}^{G}\left[[l-m]^{2}\left(l+m-1+2p-2n\right)+[l-n]^{2}\left(l+n-1+2p-2m\right)\right]\phi(l)\phi(m)\phi(n)
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+So the whole thing is
+\begin_inset Formula 
+\begin{align*}
+ & \sum_{l=R}^{G}\sum_{m=l+1}^{G}[l-m]^{2}\left(m-l-1+2p\right)\phi(m)\phi(l)\phi(l)\\
++ & \sum_{l=R}^{G}\sum_{n=l+1}^{G}[l-n]^{2}\left(l-n-1+2p\right)\phi(l)\phi(n)\phi(n)\\
++ & \textrm{triple sum...}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+In the first two equations, change variables to get
+\begin_inset Formula 
+\begin{align*}
+ & \sum_{l=R}^{G}\sum_{m=l+1}^{G}[l-m]^{2}\left(m-l-1+2p\right)\phi(m)\phi(l)\phi(l)\\
++ & \sum_{m=R}^{G}\sum_{l=m+1}^{G}[m-l]^{2}\left(m-l-1+2p\right)\phi(m)\phi(l)\phi(l)\\
++ & \textrm{triple sum...}
+\end{align*}
+
+\end_inset
+
+and we note those first two sums add back up to 
+\begin_inset Formula 
+\[
+\sum_{l=R}^{G}\sum_{m=R}^{G}[l-m]^{2}\left(m-l-1+2p\right)\phi(m)\phi(l)\phi(l)
+\]
+
+\end_inset
+
+using that the terms where 
+\begin_inset Formula $l=m$
+\end_inset
+
+ are zero.
+ Separating this into
+\begin_inset Formula 
+\[
+\sum_{l=R}^{G}\sum_{m=R}^{G}-[l-m]^{3}\phi(m)\phi(l)\phi(l)+\sum_{l=R}^{G}\sum_{m=R}^{G}(2p-1)\phi(m)\phi(l)\phi(l)
+\]
+
+\end_inset
+
+presumably the first term goes to 0??? Only no, because the binomial weights
+ aren't symmetric in 
+\begin_inset Formula $m$
+\end_inset
+
+ and 
+\begin_inset Formula $l$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Plain Layout
+While the second term is positive if 
+\begin_inset Formula $p>1/2$
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \end_body

@@ -27,9 +27,9 @@ library(dplyr)
 
 #' Title
 #'
-#' @param G Group size
 #' @param b benefit of being cooperated with
 #' @param c cost of cooperation
+#' @param G Group size
 #' @param n_groups number of groups
 #' @param T_rounds number of rounds per generation
 #' @param initial_thresholds initial vector of thresholds k, size G*n_groups
@@ -38,7 +38,7 @@ library(dplyr)
 #' @export
 #'
 #' @examples
-run_simulation <- function (G, b, c, n_groups, T_rounds, initial_thresholds, q,
+run_simulation <- function (b, c, G, n_groups, T_rounds, initial_thresholds, q,
                             generations = 1000L) {
   stopifnot(G > 1, n_groups > 1, T_rounds > 1, c >=0, b >= c, q >= 0, q <= 1,
             length(initial_thresholds) == G * n_groups,
@@ -81,14 +81,12 @@ run_one_round <- function(coop_last_round, thresholds, params) {
   N <- G * n_groups
   group_index <- rep(1:n_groups, each = G)
 
-  # returns a n_groups length vector of the proportion who cooperated
-  # in each group, given a N-vector of individual cooperation
-  calculate_mean_group_coop <- function (coop_vector) {
-    tapply(coop_vector, group_index, mean)
-  }
+  # calculate past average cooperation of groups against every indiv
+  dfr <- as.data.frame(coop_last_round)
+  group_dfrs <- split(dfr, group_index)
+  group_dfrs <- vapply(group_dfrs, colMeans, FUN.VALUE = numeric(N))
+  mean_group_coop <- t(group_dfrs)
   
-  # calculate cooperation against every individual
-  mean_group_coop <- apply(coop_last_round, 2, calculate_mean_group_coop)
   stopifnot( dim(mean_group_coop) == c(n_groups, N) )
 
   coop_with_group <- apply(mean_group_coop, 1, function (mgc) mgc >= thresholds)
@@ -121,10 +119,15 @@ run_one_generation <- function (thresholds, params) {
   # where everybody cooperated. Then only "selfish" types with
   # a threshold above 1 will not cooperate in round 1
   coop <- matrix(TRUE, N, N)
+  unchanged <- FALSE
   for (t in 1:T_rounds) {
-    result <- run_one_round(coop_last_round = coop, thresholds = thresholds, 
+    # if cooperation is unchanged from last time, result will be unchanged too:
+    if (! unchanged) {
+      result <- run_one_round(coop_last_round = coop, thresholds = thresholds, 
                             params = params)
+    }
     payoffs <- payoffs + result$payoffs
+    unchanged <- all(result$coop == coop)
     coop <- result$coop
   }
   
@@ -168,21 +171,19 @@ run_selection_process <- function (thresholds, payoffs, params) {
                                           replace = TRUE, 
                                           prob = payoffs)
   
+  # always randomize groups
+  new_thresholds <- sample(new_thresholds)
+  
   return(new_thresholds)
 }
 
 
-params <- list(n_groups = 10, G = 20, b = 2, c = 1, T_rounds = 20, q = 0, 
-               generations = 1000)
-thresholds <- rep(c(0.8,  1.01), each = params$G * params$n_groups / 2)
+
+thresholds <- rep(c(0.9, 1.01), each = 200)
 thresholds <- sample(thresholds)
-
-# run_one_round(coop_last_round = matrix(TRUE, 9, 9), thresholds = thresholds, params = params)
-# payoffs <- run_one_generation(thresholds = thresholds, params = params)
-# new_thresholds <- run_selection_process(thresholds, payoffs, params)
-
-result <- run_simulation(G = 20, b = 3, c = 1, n_groups = 10, 
-               initial_thresholds = thresholds, 
-               T_rounds = 20, 
-               q = 0, 
-               generations = 50)
+result <- run_simulation(b = 5, c = 1, 
+                         G = 10, n_groups = 40, 
+                         initial_thresholds = thresholds, 
+                         T_rounds = 20, 
+                         q = 0, 
+                         generations = 250)
