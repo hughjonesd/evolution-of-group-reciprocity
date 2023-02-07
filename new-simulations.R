@@ -36,8 +36,9 @@ library(purrr)
 #' @param initial_thresholds initial vector of thresholds k, size G*n_groups
 #'   A `k >= 1` is a selfish type
 #' @param k initial threshold of GR types. This overrides `initial_thresholds` 
-#'   and gives a vector of 50% `k`, 50% `1` (i.e. selfish types), randomized 
-#'   across groups
+#'   and gives a vector of `prop_gr` `k`, `1-prop_gr` `1` (i.e. selfish types),
+#'   randomized across groups
+#' @param prop_gr initial proportion of GR types.
 #' @param q what proportion of the new generation reproduces by "local" fitness
 #'   i.e. from the local group proportionally to fitness. Note that groups are
 #'   always randomized between generations.
@@ -45,16 +46,25 @@ library(purrr)
 #'   we stop early with a warning).
 #'
 #' @return Vector of thresholds k after all generations, or at fixation
-run_simulation <- function (b, c, G, n_groups, T_rounds, 
-                            initial_thresholds = NULL, k = NULL, 
-                            q, generations = 100) {
+run_simulation <- function (
+                            b, 
+                            c, 
+                            G, 
+                            n_groups, 
+                            T_rounds, 
+                            initial_thresholds = NULL, 
+                            k = NULL, 
+                            prop_gr = 0.5,
+                            q = 0, 
+                            generations = 100
+                            ) {
   stopifnot(G > 1, n_groups > 1, T_rounds > 1, c >=0, b >= c, q >= 0, q <= 1,
             generations >= 1)
   if (! is.null(initial_thresholds)) {
     stopifnot(length(initial_thresholds) == G * n_groups,
             all(initial_thresholds >= 0))
   } else {
-    stopifnot(k >= 0, k <= 1)
+    stopifnot(k >= 0, k <= 1, prop_gr >= 0, prop_gr <= 1)
   }
   
   params <- list(b = b, c = c, G = G, n_groups = n_groups, T_rounds = T_rounds,
@@ -62,7 +72,9 @@ run_simulation <- function (b, c, G, n_groups, T_rounds,
   thresholds <- if (is.null(k)) {
                   initial_thresholds
                 } else {
-                  sample(rep(c(k, 1), G * n_groups / 2)) 
+                  thr <- rep(1, G*n_groups)
+                  thr[1:ceiling(prop_gr * G * n_groups)] <- k
+                  sample(thr)
                 }
   for (gen in 1:generations) {
     payoffs <- run_one_generation(thresholds = thresholds, params = params)
@@ -78,48 +90,6 @@ run_simulation <- function (b, c, G, n_groups, T_rounds,
   return(thresholds)
 }
 
-#' Run a single round of cooperation
-#'
-#' @param coop_last_round N*N matrix of cooperation (T) or 
-#'   defection (F) in previous round. Row i, j represents whether i cooperated
-#'   with j.
-#' @param thresholds G*n_groups vector of thresholds
-#' @param params List of simulation global parameters: b, c, n_groups, G, T_rounds
-#'
-#' @return list containing `coop` N*N matrix of cooperation or defection this round;
-#'   and `payoffs` N-vector of this-round payoffs
-run_one_round <- function(coop_last_round, thresholds, params) {
-  # Rows 1-G are the behaviour of the first group
-  # Rows G+1 - 2G are the behaviour of the second group etc.
-  G <- params$G
-  n_groups <- params$n_groups
-  N <- G * n_groups
-  group_index <- rep(1:n_groups, each = G)
-
-  # calculate past average cooperation of groups against every indiv
-  group_list <- lapply(seq(1, by = G, length = n_groups),
-                         function (ix) coop_last_round[ix:(ix+G-1), ]
-                       )
-  mean_group_coop <- vapply(group_list, colMeans, FUN.VALUE = numeric(N))
-  mean_group_coop <- t(mean_group_coop)
-  
-  stopifnot( dim(mean_group_coop) == c(n_groups, N) )
-
-  coop_with_group <- apply(mean_group_coop, 1, function (mgc) mgc > thresholds)
-  # row i, column j says whether individual i should cooperate with
-  # everyone in group j
-
-  # to create the full NxN matrix, we just repeat the group columns G times each:
-  coop <- coop_with_group[, group_index]
-  
-  # each individual loses c from cooperating and gains b from being coop-ed with
-  # we normalize so that the sucker's payoff is zero
-  payoffs <- N * params$c - 
-             rowSums(coop) * params$c +
-             colSums(coop) * params$b 
-  
-  list(payoffs = payoffs, coop = coop)
-}
 
 #' Run a generation of T_rounds rounds
 #'
@@ -148,6 +118,52 @@ run_one_generation <- function (thresholds, params) {
   }
   
   return(payoffs)
+}
+
+
+#' Run a single round of cooperation
+#'
+#' @param coop_last_round N*N matrix of cooperation (T) or 
+#'   defection (F) in previous round. Row i, j represents whether i cooperated
+#'   with j.
+#' @param thresholds G*n_groups vector of thresholds
+#' @param params List of simulation global parameters: b, c, n_groups, G, T_rounds
+#'
+#' @return list containing `coop` N*N matrix of cooperation or defection this round;
+#'   and `payoffs` N-vector of this-round payoffs
+run_one_round <- function(coop_last_round, thresholds, params) {
+  # Rows 1-G are the behaviour of the first group
+  # Rows G+1 - 2G are the behaviour of the second group etc.
+  G <- params$G
+  n_groups <- params$n_groups
+  N <- G * n_groups
+  group_index <- rep(1:n_groups, each = G)
+
+  # calculate past average cooperation of groups against every indiv
+  group_list <- lapply(seq(1, by = G, length = n_groups),
+                         function (ix) coop_last_round[ix:(ix+G-1), ]
+                       )
+  mean_group_coop <- vapply(group_list, colMeans, FUN.VALUE = numeric(N))
+  mean_group_coop <- t(mean_group_coop)
+  
+  stopifnot( dim(mean_group_coop) == c(n_groups, N) )
+
+  # note that the strict inequality means a threshold of 1 is a selfish type
+  # you can use a threshold of e.g. 0.99 for a true 1-threshold GR
+  coop_with_group <- apply(mean_group_coop, 1, function (mgc) mgc > thresholds)
+  # row i, column j says whether individual i should cooperate with
+  # everyone in group j
+
+  # to create the full NxN matrix, we just repeat the group columns G times each:
+  coop <- coop_with_group[, group_index]
+  
+  # each individual loses c from cooperating and gains b from being coop-ed with
+  # we normalize so that the sucker's payoff is zero
+  payoffs <- N * params$c - 
+             rowSums(coop) * params$c +
+             colSums(coop) * params$b 
+  
+  list(payoffs = payoffs, coop = coop)
 }
 
 
@@ -237,3 +253,38 @@ ggplot(params, aes(variant, prop_gr, color = variant)) +
   labs(y = "Prop. GR types") +
   theme_minimal() +
   theme(legend.position = "none", text = element_text(size = 12))
+
+# a simulation with large groups
+# starting with high k and many initial GR types helps, since then
+# there are likely to be some supraliminal groups, but not many
+# free riders in them
+big <- run_simulation(b = 5, c = 1, 
+                      k = 0.9, prop_gr = 0.9,
+                      G = 40, n_groups = 20, 
+                      T_rounds = 20,  q = 0, generations = 1000)
+
+
+# a simulation with many starting thresholds and 25% selfish
+# this typically reduces to one or two types, which suggests there's a coordination
+# advantage to being the same type as others
+poly <- run_simulation(b = 5, c = 1, 
+                      initial_thresholds = sample(c(runif(300), rep(1, 100))),
+                      G = 8, n_groups = 50, 
+                      T_rounds = 20,  q = 0, generations = 1000)
+
+polys <- replicate(20, {
+          run_simulation(b = 5, c = 1, 
+                        initial_thresholds = sample(c(runif(300), rep(1, 100))),
+                        G = 8, n_groups = 50, 
+                        T_rounds = 20,  q = 0, generations = 500)
+        })
+apply(polys, 2, \(x) length(unique(x)))
+min_and_max <- apply(polys, 2, range)
+data.frame(min = min_and_max[1,], max = min_and_max[2,]) |> 
+  arrange(max, min) |> 
+  mutate(rep = 1:20) |> 
+  ggplot() + 
+    geom_segment(aes(x = rep, xend = rep, y = min, yend = max)) +
+    geom_point(aes(x = rep, y = min)) + 
+    geom_point(aes(x = rep, y = max)) + 
+    labs(y = "Thresholds", x = "Simulation")
