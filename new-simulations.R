@@ -209,16 +209,16 @@ params <- data.frame(b = 5, c = 1, G = 8, n_groups = 50, k = 0.5, T_rounds = 20,
                      q = 0, generations = 100)
 
 params <- bind_rows(
-  basic    = params,
-  `high k`  = params |> mutate(k = 0.7),
-  `high G` = params |> mutate(G = 16),
-  `few groups` = params |> mutate(n_groups = 20),
-  `long T`     = params |> mutate(T_rounds = 40),
-  `local selection` = params |> mutate(q = 0.5),
+  Basic    = params,
+  `High k = 0.7`    = params |> mutate(k = 0.7),
+  `High G = 16`     = params |> mutate(G = 16),
+  `Few groups = 20` = params |> mutate(n_groups = 20),
+  `Short T = 10`     = params |> mutate(T_rounds = 10),
+  `Local selection q = 0.25` = params |> mutate(q = 0.25),
   .id = "variant"
 )
 
-n_reps <- 20
+n_reps <- 30
 params <- params[rep(1:nrow(params), n_reps), ]
 
 prop_gr <- params |> 
@@ -232,6 +232,8 @@ params$rep <- 1:n_reps
 library(ggplot2)
 
 ggplot(params, aes(variant, prop_gr, color = variant)) + 
-  geom_point() + 
-  stat_summary(fun = mean, shape = "cross") + 
-  theme_minimal()
+  geom_point(alpha = 0.5) + 
+  stat_summary(fun = mean, shape = "cross", size = 1.3) + 
+  labs(y = "Prop. GR types") +
+  theme_minimal() +
+  theme(legend.position = "none", text = element_text(size = 12))
