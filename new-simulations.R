@@ -26,7 +26,7 @@
 library(dplyr)
 library(purrr)
 
-#' Title
+#' Run a single simulation with specific parameters
 #'
 #' @param b benefit of being cooperated with
 #' @param c cost of cooperation
@@ -34,22 +34,36 @@ library(purrr)
 #' @param n_groups number of groups
 #' @param T_rounds number of rounds per generation
 #' @param initial_thresholds initial vector of thresholds k, size G*n_groups
+#'   A `k >= 1` is a selfish type
+#' @param k initial threshold of GR types. This overrides `initial_thresholds` 
+#'   and gives a vector of 50% `k`, 50% `1` (i.e. selfish types), randomized 
+#'   across groups
+#' @param q what proportion of the new generation reproduces by "local" fitness
+#'   i.e. from the local group proportionally to fitness. Note that groups are
+#'   always randomized between generations.
+#' @param generations how many generations to run for (max; if we hit fixation
+#'   we stop early with a warning).
 #'
-#' @return
-#' @export
-#'
-#' @examples
-run_simulation <- function (b, c, G, n_groups, T_rounds, initial_thresholds, q,
-                            generations = 1000L) {
+#' @return Vector of thresholds k after all generations, or at fixation
+run_simulation <- function (b, c, G, n_groups, T_rounds, 
+                            initial_thresholds = NULL, k = NULL, 
+                            q, generations = 100) {
   stopifnot(G > 1, n_groups > 1, T_rounds > 1, c >=0, b >= c, q >= 0, q <= 1,
-            length(initial_thresholds) == G * n_groups,
-            all(initial_thresholds >= 0), 
             generations >= 1)
+  if (! is.null(initial_thresholds)) {
+    stopifnot(length(initial_thresholds) == G * n_groups,
+            all(initial_thresholds >= 0))
+  } else {
+    stopifnot(k >= 0, k <= 1)
+  }
   
   params <- list(b = b, c = c, G = G, n_groups = n_groups, T_rounds = T_rounds,
                  q = q)
-  
-  thresholds <- initial_thresholds
+  thresholds <- if (is.null(k)) {
+                  initial_thresholds
+                } else {
+                  sample(rep(c(k, 1), G * n_groups / 2)) 
+                }
   for (gen in 1:generations) {
     payoffs <- run_one_generation(thresholds = thresholds, params = params)
     thresholds <- run_selection_process(thresholds = thresholds, 
@@ -137,7 +151,7 @@ run_one_generation <- function (thresholds, params) {
 }
 
 
-#' Run the selection process
+#' Run the selection process after a generation
 #'
 #' @param thresholds Existing thresholds N-vector
 #' @param payoffs Payoffs from the T rounds
@@ -184,34 +198,40 @@ run_selection_process <- function (thresholds, payoffs, params) {
 
 stop("Tests below")
 
-thresholds <- rep(c(0.8, 1), each = 90)
-thresholds <- sample(thresholds)
-result <- run_simulation(b = 5, c = 1, 
-                         G = 6, n_groups = 30, 
-                         initial_thresholds = thresholds, 
-                         T_rounds = 20, 
-                         q = 0, 
-                         generations = 250)
-table(result)
 
-params <- expand.grid(rep = 1:2, n_groups = c(30, 200))
+# experiments to run:
+# * vary n_groups
+# * vary T_rounds
+# * vary q
+# 
 
-params$prop_gr <- purrr::pmap_dbl(params, 
-                   \(rep, n_groups) {
-                      G <- 6
-                      thresholds <- rep(c(0.8, 1), each = n_groups * G / 2)
-                      thresholds <- sample(thresholds)
-                      result1 <- run_simulation(b = 5, c = 1, 
-                                             G = G, n_groups = n_groups, 
-                                             initial_thresholds = thresholds, 
-                                             T_rounds = 20, 
-                                             q = 0, 
-                                             generations = 250)
-                      mean(result1 < 1)
-                    })
+params <- data.frame(b = 5, c = 1, G = 8, n_groups = 50, k = 0.5, T_rounds = 20,
+                     q = 0, generations = 100)
 
+params <- bind_rows(
+  basic    = params,
+  `high k`  = params |> mutate(k = 0.7),
+  `high G` = params |> mutate(G = 16),
+  `few groups` = params |> mutate(n_groups = 20),
+  `long T`     = params |> mutate(T_rounds = 40),
+  `local selection` = params |> mutate(q = 0.5),
+  .id = "variant"
+)
 
-params |> group_by(n_groups) |> summarize(mean(prop_gr))
-summary(lm(prop_gr~factor(n_groups), params))
-ggplot(params, aes(n_groups, prop_gr, color = factor(n_groups))) + 
-  geom_point(position = position_jitter(width = 2))
+n_reps <- 20
+params <- params[rep(1:nrow(params), n_reps), ]
+
+prop_gr <- params |> 
+           select(-variant) |> 
+           purrr::pmap(run_simulation) |> 
+           purrr::map_dbl(\(x) mean(x < 1))
+
+params$prop_gr <- prop_gr
+params$rep <- 1:n_reps
+
+library(ggplot2)
+
+ggplot(params, aes(variant, prop_gr, color = variant)) + 
+  geom_point() + 
+  stat_summary(fun = mean, shape = "cross") + 
+  theme_minimal()
