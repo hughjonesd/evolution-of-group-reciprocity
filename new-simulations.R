@@ -24,6 +24,7 @@
 #  
 
 library(dplyr)
+library(purrr)
 
 #' Title
 #'
@@ -82,14 +83,15 @@ run_one_round <- function(coop_last_round, thresholds, params) {
   group_index <- rep(1:n_groups, each = G)
 
   # calculate past average cooperation of groups against every indiv
-  dfr <- as.data.frame(coop_last_round)
-  group_dfrs <- split(dfr, group_index)
-  group_dfrs <- vapply(group_dfrs, colMeans, FUN.VALUE = numeric(N))
-  mean_group_coop <- t(group_dfrs)
+  group_list <- lapply(seq(1, by = G, length = n_groups),
+                         function (ix) coop_last_round[ix:(ix+G-1), ]
+                       )
+  mean_group_coop <- vapply(group_list, colMeans, FUN.VALUE = numeric(N))
+  mean_group_coop <- t(mean_group_coop)
   
   stopifnot( dim(mean_group_coop) == c(n_groups, N) )
 
-  coop_with_group <- apply(mean_group_coop, 1, function (mgc) mgc >= thresholds)
+  coop_with_group <- apply(mean_group_coop, 1, function (mgc) mgc > thresholds)
   # row i, column j says whether individual i should cooperate with
   # everyone in group j
 
@@ -157,15 +159,17 @@ run_selection_process <- function (thresholds, payoffs, params) {
   new_thresholds <- numeric(N)
   
   # calculate within-group selection for everyone...
-  dfr <- data.frame(groups = groups, thresholds = thresholds, payoffs = payoffs)
-  dfr <- dfr |> 
-         group_by(groups) |> 
-         mutate(
-           wg_thresholds = sample(thresholds, replace = TRUE, prob = payoffs)
-         )
-  # ... but only apply it for the within-group people
-  new_thresholds[within_group] <- dfr$wg_thresholds[within_group]
-    
+  if (q > 0) { # speed optimization
+    dfr <- data.frame(groups = groups, thresholds = thresholds, payoffs = payoffs)
+    dfr <- dfr |> 
+           group_by(groups) |> 
+           mutate(
+             wg_thresholds = sample(thresholds, replace = TRUE, prob = payoffs)
+           )
+    # ... but only apply it for the within-group people
+    new_thresholds[within_group] <- dfr$wg_thresholds[within_group]
+  }
+  
   new_thresholds[!within_group] <- sample(thresholds, 
                                           size = sum(!within_group), 
                                           replace = TRUE, 
@@ -178,12 +182,36 @@ run_selection_process <- function (thresholds, payoffs, params) {
 }
 
 
+stop("Tests below")
 
-thresholds <- rep(c(0.9, 1.01), each = 200)
+thresholds <- rep(c(0.8, 1), each = 90)
 thresholds <- sample(thresholds)
 result <- run_simulation(b = 5, c = 1, 
-                         G = 10, n_groups = 40, 
+                         G = 6, n_groups = 30, 
                          initial_thresholds = thresholds, 
                          T_rounds = 20, 
                          q = 0, 
                          generations = 250)
+table(result)
+
+params <- expand.grid(rep = 1:2, n_groups = c(30, 200))
+
+params$prop_gr <- purrr::pmap_dbl(params, 
+                   \(rep, n_groups) {
+                      G <- 6
+                      thresholds <- rep(c(0.8, 1), each = n_groups * G / 2)
+                      thresholds <- sample(thresholds)
+                      result1 <- run_simulation(b = 5, c = 1, 
+                                             G = G, n_groups = n_groups, 
+                                             initial_thresholds = thresholds, 
+                                             T_rounds = 20, 
+                                             q = 0, 
+                                             generations = 250)
+                      mean(result1 < 1)
+                    })
+
+
+params |> group_by(n_groups) |> summarize(mean(prop_gr))
+summary(lm(prop_gr~factor(n_groups), params))
+ggplot(params, aes(n_groups, prop_gr, color = factor(n_groups))) + 
+  geom_point(position = position_jitter(width = 2))
