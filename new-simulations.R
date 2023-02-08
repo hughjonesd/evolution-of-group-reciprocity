@@ -288,3 +288,23 @@ data.frame(min = min_and_max[1,], max = min_and_max[2,]) |>
     geom_point(aes(x = rep, y = min)) + 
     geom_point(aes(x = rep, y = max)) + 
     labs(y = "Thresholds", x = "Simulation")
+
+
+
+# approximating the model: many groups, small groups (for speed), largish T,
+# vary k around c/b, many generations
+
+model <- data.frame(
+  k = rep(c(1/4, 1/3, 1/2) + 0.01, each = 3),
+  b = rep(2:4, 3),
+  c = 1,
+  T_rounds = 50,
+  generations = 1000,
+  n_groups = 150,
+  G = 12
+)
+model$prop_gr <- model$k
+
+prop_gr <- model |> 
+           purrr::pmap(run_simulation) |> 
+           purrr::map_dbl(\(x) mean(x < 1))
