@@ -2,9 +2,9 @@
 
 # simulations for evolution of group reciprocity
 # each generation
-# Groups of size G, each total N = nG
+# n_groups groups of size G, total N = n_groups * G
 # T_rounds rounds, everyone plays a PD against everyone
-# cost of cooperation -c, benefit of being cooperated with b
+# cost of cooperation c, benefit of being cooperated with b
 #
 # Selfish types always defect
 # GR types cooperate in round 1, then cooperate with group g
