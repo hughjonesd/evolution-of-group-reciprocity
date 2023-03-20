@@ -1,0 +1,298 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath}
+\usepackage{geometry}
+\usepackage{enumitem}
+\setitemize{noitemsep}
+\usepackage{tabularx}
+\usepackage{setspace}
+\newcolumntype{x}{>{\centering\arraybackslash}X}
+
+\usepackage{fontspec,xunicode}
+\defaultfontfeatures{Mapping=tex-text}
+\setsansfont{TeX Gyre Heros}
+\setromanfont{Heuristica}
+
+\usepackage{unicode-math}
+\setmathfont{TeX Gyre Schola Math}
+
+\usepackage{titlesec} %Package for adjusting the fonts of the \section and \subsection and so forth.
+\titleformat{\section}{\Large\bfseries\sffamily}{\thesection.}{1em}{}
+\titleformat{\subsection}{\large\bfseries\sffamily}{\thesubsection.}{1em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries\sffamily}{\thesubsubsection.}{1em}{}
+
+\onehalfspacing
+
+\begin{document}
+\global\long\def\bpi{\bar{p}}%
+\global\long\def\upi{\underline{p}}%
+
+
+\section{Introduction}
+
+Humans see other humans as members of groups, and they treat them differently
+based on their group membership. Cognitively, they classify humans as
+members of different groups, form stereotypes about other groups, and track 
+group reputations. Motivationally, they form positive or negative attitudes to 
+other groups and may discriminate against some groups. They may also reciprocate 
+towards groups as a whole: that is, they may respond to one person's actions by
+acting differently towards his or her fellow group members. We have experimental
+evidence for group reciprocity, but so far there is no theoretical account of 
+how it might have evolved. This paper sets out a theoretical model in which group
+reciprocity can evolve. The requirements are quite minimal. Individuals know other
+individuals' group membership, and they can recall outgroup members' past 
+behaviour towards them. That is enough for group reciprocity to evolve in a 
+repeated prisoner's dilemma. So, intergroup cognition alone is enough to make
+intergroup reciprocity evolutionarily stable.
+
+Group reciprocity is important in several ways. Theoretically, interethnic 
+peace may be sustained by the threat of reciprocation. This could have allowed
+humans to live in peace with neighbouring groups (perhaps punctuated by episodes of
+punitive conflict), whereas chimpanzees always attack neighbouring bands on 
+contact. It could also enable deeper forms of intergroup cooperation, such
+as trade. So, the capacity for group reciprocity may be a stepping stone in the
+evolution of humans as a cooperative species. 
+
+Group reciprocity is also related to generalized upstream reciprocity (XXX). 
+The literature has concluded that it is hard for generalized upstream 
+reciprocity to evolve except in special circumstances. So, our model
+could explain the existence of generalized upstream reciprocity in a limited form.
+
+Practically, group reciprocity may underlie modern conflicts, including 
+interethnic violence \citep{horowitz1985ethnicgroups,horowitz2001thedeadly} and 
+civil wars \citep{haushofer_both_2010}. \citet{fearon1996explaining} show how
+interethnic peace may be sustained by the threat of intergroup conflict. We 
+replicate this insight in a different framework, using an evolutionary model 
+rather than their repeated game model.
+
+Our result comes about as follows. Groups of group-reciprocators are able to
+establish cooperative relationships with other groups of group-reciprocators,
+while they avoid cooperating with groups of selfish types. Selfish types within
+a group of mostly group-reciprocators get the highest payoff, but this is balanced
+out because most selfish types are in mostly-selfish groups, who have too
+few reciprocators to sustain cooperation.
+
+We also use computations to check the robustness of our theoretical model. (XXX
+result preview.)
+
+Our model shows how group reciprocity can evolve, and it also has some insights
+about how its form is shaped by evolutionary pressure. The most robust forms of
+group reciprocity have high thresholds of cooperation - that is, reciprocators
+only cooperate with groups a high proportion of whose members previously
+cooperated towards them. These high thresholds make it less likely that selfish
+free riders will invade, since only groups which are almost all reciprocators
+get the benefit of mutual cooperation. The resulting equilibrium is 
+"trigger happy": it sustains a high level of cooperation, but is also sensitive 
+to small amounts of defection.
+
+\section{Literature review}
+
+
+Group reciprocity is a form of "upstream reciprocity", where an individual
+who is helped or harmed by someone becomes more likely to respectively help 
+or harm other third parties. It is thought hard for upstream reciprocity to evolve,
+because it does not target reciprocity in a way that might lead to stable 
+bilateral relationships \citep{nowak2007upstream}. We show that the existence
+of groups can make this problem easier, by allowing different \emph{groups} 
+to form bilateral relationships. This is true even though the groups don't
+possess any power of collective action (for instance, they can't collectively
+decide to sanction outgroups, or force their members to behave a certain way).
+Simply making individuals' group membership visible is enough to let group
+reciprocity evolve, because it lets people target help on groups whose members 
+have (mostly) been helpful.
+
+Several experiments show evidence for group reciprocity, also known as "vicarious
+revenge" \citep{lickel_vicarious_2006,gaertner2008whenrejection,stenstrom_roles_2008
+,hugh2017intergroup,hugh2019humans,romano2022direct}. There is also field 
+evidence of reciprocity in violent intergroup conflict \citep{haushofer_both_2010}.
+Anthropologists have recorded feud institutions, where group reciprocity is a
+normative expectation and where there may be collective mechanisms for managing 
+and adjudicating feuds \citep{boehm1984blood,chagnon1988lifehistories}. 
+
+What we lack is a theory of how group reciprocity might evolve. While there
+are evolutionary theories to explain individual reciprocity and revenge
+\citep{mccullough2013cognitive}, there is none for group reciprocity. This is
+a problem, because one can't simply assume that the same forces are behind the evolution of individual reciprocity and group reciprocity. In particular, group
+reciprocity seems to be less targeted than individual reciprocity, and it also
+seems to involve a public good, since a person's cooperation against a group
+reciprocator subsequently benefits the person's entire group.
+\citet{petersen2010evolutionary} argue that group members "have an interest in
+advertising that victimizations of its members will not go unpunished", but this
+ignores the public good aspect of the problem.
+
+\citet{fearon1996explaining} introduce a repeated-game model to explain how
+different ethnic groups can live at peace. In their "spiral regime", defection
+by any member of ethnic group A towards a member of B leads to subsequent 
+defection by all members of B towards members of A for a fixed number of periods.
+This is an infinitely repeated game with multiple equilibria. The goal is to explain
+institutions which support interethnic cooperation; the spiral regime is analogous
+to institutions like feuds.
+
+Our theory has a different setup and motivation. We examine the evolutionary
+stability of different types in a finitely-repeated game. In Fearon and Laitin,
+cooperation is supported by the threat of collective punishment. In our model,
+group  reciprocity is evolutionarily stable because individual free-riding is
+balanced against group selection. That is, cooperating with cooperative outgroups
+benefits one's own group by encouraging the outgroup to cooperate in return. The 
+individual benefit of free-riding is balanced against this group benefit. When 
+the threshold for reciprocity is high, groups which get into cycles of cooperation
+with outgroups contain many reciprocators and few free-riders; most free-riders 
+are in groups below the threshold, which don't cooperate, and therefore they 
+don't benefit much from free-riding off the reciprocal types. So, our model
+is designed to explain the evolution of reciprocal ("strong" reciprocal) motivations in humans, rather than the stability of institutions supporting reciprocity.
+
+\section{Model}
+
+We consider a mixed population of two types, selfish and group reciprocators (GR). At the beginning of each generation, the population randomly divides into a large number of groups of size~$G$ each.
+Let~$p$ denote the population share of GR types. 
+Let~$p_g$ be the proportion of GR in group~$g$, which is distributed binomially.
+
+At every step~$t$, everybody interacts with everybody. In each pair, each individual chooses between cooperation and defection. Cooperation entails a cost~$c$ to the cooperator and a benefit~$b$ to her partner. Defection carries no costs. That is, each pair plays the following Prisoner's Dilemma game:
+\begin{center}
+    \begin{tabularx}{0.5\textwidth}{|x|x|x|}
+        \hline
+        &   Cooperate   &   Defect  \\
+        \hline
+        Cooperate   &   $b-c$   &   $-c$    \\
+        \hline
+        Defect  &   $b$ &   $0$   \\
+        \hline
+    \end{tabularx}
+\end{center}
+
+Selfish types always defect, A GR individual~$i$ starts by cooperating, and then cooperates with all individuals belonging to group~$g$ with a probability~$\phi(l_{gi})$, where~$l_{gi}$ is the proportion of individuals from group~$g$ who cooperated with individual~$i$ in round $t-1$.
+$\phi(\cdot)$ is monotonically weakly increasing. We consider the cutoff strategy: 
+$$
+    \phi(l_{gi}) =
+    \begin{cases}
+        1   &   \text{if } l_{gi} \geq k  \\
+        0   &   \text{otherwise.}
+    \end{cases}
+$$
+The fitness is the payoff at the limit where~$t\to\infty$. Equivalently, since the game always settles to a stationary action profile, it is the average payoff of~$T$ rounds when~$T\to\infty$.
+
+Given this behaviour, GR in all groups where $p_g \geq k$ help all individuals in other groups where $p_g \geq k$ and defect against members of all other groups. GR in other groups always defect.
+%
+Individuals' fitness therefore depends only on whether they are in a ``supraliminal" group with $p_g \geq k$, and on their type. Let~$q$ be the 
+proportion of supraliminal groups. Let~$\bpi$ be the proportion of 
+GR individuals in supraliminal groups (out of the total population in such groups). Let~$\upi$ be the proportion of GR individuals in subliminal groups (out of the total population in such groups). It follows that
+\begin{itemize}
+    \item Group reciprocators in supraliminal groups get a payoff of~$\bpi qb - qc$.
+    \item Selfish types in supraliminal groups get~$\bpi qb$.
+    \item Group reciprocators and selfish types in subliminal groups get~$0$.
+\end{itemize}
+
+After each generation, reproductive success is proportional to fitness, the total population size stays the same, and children are remixed randomly into new groups of the same size.
+%
+The mean fitness of the GR type is
+
+\begin{equation*}
+\frac{
+  \bpi q(q(\bpi b - c))
+}{
+  p
+}
+\end{equation*}
+
+and the mean fitness of selfish types is
+
+\begin{equation*}
+\frac{
+  (1 - \bpi)q(q\bpi b)
+}{
+  1 - p
+}
+\end{equation*}
+
+After rearranging, the mean fitness of reciprocators is higher if
+
+
+\begin{equation}
+\label{gr-wins}
+\frac{ \bpi - p}{ 1 - p} \ge \frac{c}{b}.
+\end{equation}
+
+where 
+
+\[
+\bpi = E[p_g | p_g \ge k] = \frac{1}{G} \frac{\sum_{l=kG}^G l \mathrm{Binom}(l,G,p)}{\sum_{l=kG}^G \mathrm{Binom}(l,G,p)}
+\]
+
+The LHS of \eqref{gr-wins} is decreasing in $p$ and is equal
+to the threshold $k$ when $p = 0$.\footnote{
+    When the share of GR in the population is very small, the probability that$p_g = k$ conditional on~$p_g\geq k$ goes to one.
+}
+%
+It follows that there is a unique ESS with a positive share of group
+reciprocators if and only if $k > \frac{c}{b}$. Otherwise the population is homogeneously selfish in the unique ESS.
+
+\end{document}
+%%% THE REST OF THE ATTEMPTS TO PROVE ARE IN THE SEPARATE FILE
+
+\subsection*{Proof that \eqref{gr-wins} goes to $k$ as $p \to 0$}
+
+
+Consider
+
+\[
+\frac{\bpi - p}{1-p}
+\]
+The limit as $p \to 0$ is given by $\bpi$. For $k=0$ this is
+0 since $\bpi = p$. For $k>0$, write
+\[
+\bpi=\frac{1}{G}\frac{\sum_{l=kG}^{G}l\phi(l,G,p)}{\sum_{l=kG}^{G}\phi(l,G,p)}=\frac{1}{G}\frac{\sum_{l=kG}^{G}l\binom{G}{l}p^{l}(1-p)^{G-l}}{\sum_{l=kG}^{G}\binom{G}{l}p^{l}(1-p)^{G-l}}.
+\]
+
+The limit of this is given by L'H\^{o}pital's rule, since the denominator
+goes to zero. Differentiating top and bottom gives
+\[
+\frac{1}{G}\frac{\sum_{l=kG}^{G}l\binom{G}{l}(l-Gp)p^{l-1}(1-p)^{G-l-1}}{\sum_{l=kG}^{G}\binom{G}{l}(l-Gp)p^{l-1}(1-p)^{G-l-1}}
+\]
+so we have to apply the rule again. Continuing thus we eventually hit:
+\[
+\frac{1}{G}\frac{kG\binom{G}{l}(l-Gp)(l-1-Gp)(\cdots)(l-kG-Gp)p^{0}(1-p)^{G-2kG}+\cdots}{\binom{G}{l}(l-Gp)(l-1-Gp)(\cdots)(l-kG-Gp)p^{0}(1-p)^{G-2kG}+\cdots}
+\]
+ where all but the first terms vanish, leaving
+\[
+\frac{1}{G}\frac{kG\binom{G}{l}(l-Gp)(l-1-Gp)(\cdots)(l-kG-Gp)p^{0}(1-p)^{G-2kG}}{\binom{G}{l}(l-Gp)(l-1-Gp)(\cdots)(l-kG-Gp)p^{0}(1-p)^{G-2kG}}=\frac{1}{G}kG=k.
+\]
+
+
+(Old stuff)
+
+\begin{align}
+    q & = & 1 - CDF(G, p') \\
+    \bpi & = & E[p_k | p_k \ge c] \\
+    \upi & = & E[p_k | p_k < c]
+\end{align}
+
+Where $CDF$ is the binomial distribution of $p'$ out of $G$ successes, and
+the conditional expectations are also taken according to this distribution.
+
+Computations are in continuous-model-computations.R in dropbox. Plotting
+reveals:
+
+When $p$ is sufficiently below $c$, $p' = p$ and group reciprocity is 
+selectively neutral, since group reciprocators and selfish types are
+almost all in subliminal groups.
+
+For some parameters, and intermediate values of $p$, $p'>p$ so that
+group reciprocity is being selected for. That is, some groups successfully
+manage to cooperate with other groups and have higher average fitness.
+
+For high enough values of $p$, $p' < p$. This is because when almost everyone
+is cooperating, a selfish type is almost surely in a supraliminal group
+and benefits by freeriding.
+
+Conjectures and questions.
+
+1. What if the threshold can evolve? Might higher thresholds always 
+be beneficial? If so, probably only few group reciprocators exist,
+and very few are in supraliminal groups. One way to do this is
+generalize the model to have high- and low-threshold types, and see
+who wins. Note that in the model as is, a selfish type just has a
+"threshold" of above 1. Another approach is to ask if a single
+person with a different threshold can invade. He will change the
+behaviour of other groups to him, but as there are many groups,
+we can ignore the effects on other people's fitness and just
+ask if he outcompetes other group reciprocators.
+\end{document}
