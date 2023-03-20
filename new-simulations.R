@@ -229,7 +229,7 @@ params <- bind_rows(
   `High k = 0.7`    = params |> mutate(k = 0.7),
   `High G = 16`     = params |> mutate(G = 16),
   `Few groups = 20` = params |> mutate(n_groups = 20),
-  `Short T = 10`     = params |> mutate(T_rounds = 10),
+  `Short T = 10`    = params |> mutate(T_rounds = 10),
   `Local selection q = 0.25` = params |> mutate(q = 0.25),
   .id = "variant"
 )
