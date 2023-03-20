@@ -30,9 +30,119 @@
 \global\long\def\upi{\underline{p}}%
 
 
-%\section{Introduction}
 
-%* Some p
+\section{Introduction}
+
+Humans see other humans as members of groups, and they treat them differently
+based on their group membership. Cognitively, they classify humans as
+members of different groups, form stereotypes about other groups, and track 
+group reputations. Motivationally, they form positive or negative attitudes to 
+other groups and may discriminate against some groups. They may also reciprocate 
+towards groups as a whole: that is, they may respond to one person's actions by
+acting differently towards his or her fellow group members. We have experimental
+evidence for group reciprocity, but so far there is no theoretical account of 
+how it might have evolved. This paper sets out a theoretical model in which group
+reciprocity can evolve. The requirements are quite minimal. Individuals know other
+individuals' group membership, and they can recall outgroup members' past 
+behaviour towards them. That is enough for group reciprocity to evolve in a 
+repeated prisoner's dilemma. So, intergroup cognition alone is enough to make
+intergroup reciprocity evolutionarily stable.
+
+Group reciprocity is important in several ways. Theoretically, interethnic 
+peace may be sustained by the threat of reciprocation. This could have allowed
+humans to live in peace with neighbouring groups (perhaps punctuated by episodes of
+punitive conflict), whereas chimpanzees always attack neighbouring bands on 
+contact. It could also enable deeper forms of intergroup cooperation, such
+as trade. So, the capacity for group reciprocity may be a stepping stone in the
+evolution of humans as a cooperative species. 
+
+Group reciprocity is also related to generalized upstream reciprocity (XXX). 
+The literature has concluded that it is hard for generalized upstream 
+reciprocity to evolve except in special circumstances. So, our model
+could explain the existence of generalized upstream reciprocity in a limited form.
+
+Practically, group reciprocity may underlie modern conflicts, including 
+interethnic violence \citep{horowitz1985ethnicgroups,horowitz2001thedeadly} and 
+civil wars \citep{haushofer_both_2010}. \citet{fearon1996explaining} show how
+interethnic peace may be sustained by the threat of intergroup conflict. We 
+replicate this insight in a different framework, using an evolutionary model 
+rather than their repeated game model.
+
+Our result comes about as follows. Groups of group-reciprocators are able to
+establish cooperative relationships with other groups of group-reciprocators,
+while they avoid cooperating with groups of selfish types. Selfish types within
+a group of mostly group-reciprocators get the highest payoff, but this is balanced
+out because most selfish types are in mostly-selfish groups, who have too
+few reciprocators to sustain cooperation.
+
+We also use computations to check the robustness of our theoretical model. (XXX
+result preview.)
+
+Our model shows how group reciprocity can evolve, and it also has some insights
+about how its form is shaped by evolutionary pressure. The most robust forms of
+group reciprocity have high thresholds of cooperation - that is, reciprocators
+only cooperate with groups a high proportion of whose members previously
+cooperated towards them. These high thresholds make it less likely that selfish
+free riders will invade, since only groups which are almost all reciprocators
+get the benefit of mutual cooperation. The resulting equilibrium is 
+"trigger happy": it sustains a high level of cooperation, but is also sensitive 
+to small amounts of defection.
+
+\section{Literature review}
+
+
+Group reciprocity is a form of "upstream reciprocity", where an individual
+who is helped or harmed by someone becomes more likely to respectively help 
+or harm other third parties. It is thought hard for upstream reciprocity to evolve,
+because it does not target reciprocity in a way that might lead to stable 
+bilateral relationships \citep{nowak2007upstream}. We show that the existence
+of groups can make this problem easier, by allowing different \emph{groups} 
+to form bilateral relationships. This is true even though the groups don't
+possess any power of collective action (for instance, they can't collectively
+decide to sanction outgroups, or force their members to behave a certain way).
+Simply making individuals' group membership visible is enough to let group
+reciprocity evolve, because it lets people target help on groups whose members 
+have (mostly) been helpful.
+
+Several experiments show evidence for group reciprocity, also known as "vicarious
+revenge" \citep{lickel_vicarious_2006,gaertner2008whenrejection,stenstrom_roles_2008,hugh2017intergroup,hugh2019humans,romano2022direct}. There is also field 
+evidence of reciprocity in violent intergroup conflict \citep{haushofer_both_2010}.
+Anthropologists have recorded feud institutions, where group reciprocity is a
+normative expectation and where there may be collective mechanisms for managing 
+and adjudicating feuds \citep{boehm1984blood,chagnon1988lifehistories}. 
+
+What we lack is a theory of how group reciprocity might evolve. While there
+are evolutionary theories to explain individual reciprocity and revenge
+\citep{mccullough2013cognitive}, there is none for group reciprocity. This is
+a problem, because one can't simply assume that the same forces are behind the evolution of individual reciprocity and group reciprocity. In particular, group
+reciprocity seems to be less targeted than individual reciprocity, and it also
+seems to involve a public good, since a person's cooperation against a group
+reciprocator subsequently benefits the person's entire group.
+\citet{petersen2010evolutionary} argue that group members "have an interest in
+advertising that victimizations of its members will not go unpunished", but this
+ignores the public good aspect of the problem.
+
+\citet{fearon1996explaining} introduce a repeated-game model to explain how
+different ethnic groups can live at peace. In their "spiral regime", defection
+by any member of ethnic group A towards a member of B leads to subsequent 
+defection by all members of B towards members of A for a fixed number of periods.
+This is an infinitely repeated game with multiple equilibria. The goal is to explain
+institutions which support interethnic cooperation; the spiral regime is analogous
+to institutions like feuds.
+
+Our theory has a different setup and motivation. We examine the evolutionary
+stability of different types in a finitely-repeated game. In Fearon and Laitin,
+cooperation is supported by the threat of collective punishment. In our model,
+group  reciprocity is evolutionarily stable because individual free-riding is
+balanced against group selection. That is, cooperating with cooperative outgroups
+benefits one's own group by encouraging the outgroup to cooperate in return. The 
+individual benefit of free-riding is balanced against this group benefit. When 
+the threshold for reciprocity is high, groups which get into cycles of cooperation
+with outgroups contain many reciprocators and few free-riders; most free-riders 
+are in groups below the threshold, which don't cooperate, and therefore they 
+don't benefit much from free-riding off the reciprocal types. So, our model
+is designed to explain the evolution of reciprocal ("strong" reciprocal) motivations in humans, rather than the stability of institutions supporting reciprocity.
+
 \section{Model}
 
 We consider a mixed population of two types, selfish and group reciprocators (GR). At the beginning of each generation, the population randomly divides into a large number of groups of size~$G$ each.
