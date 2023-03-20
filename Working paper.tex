@@ -1,11 +1,14 @@
 \documentclass[12pt,a4paper]{article}
 \usepackage{amsmath}
+\usepackage{amsthm}
 \usepackage{geometry}
 \usepackage{enumitem}
 \setitemize{noitemsep}
 \usepackage{tabularx}
 \usepackage{setspace}
 \newcolumntype{x}{>{\centering\arraybackslash}X}
+
+\newtheorem{lemma}{Lemma}
 
 \usepackage{fontspec,xunicode}
 \defaultfontfeatures{Mapping=tex-text}
@@ -14,6 +17,29 @@
 
 \usepackage{unicode-math}
 \setmathfont{TeX Gyre Schola Math}
+
+\usepackage[backend=biber,style=ext-authoryear-comp,natbib=true,maxbibnames=100,sorting=nyt,sortcites=true,giveninits=false,uniquename=false,uniquelist=false,isbn=false,doi=false,useprefix]{biblatex}
+
+\addbibresource{grouprec.bib}
+
+% removes "in:"
+\renewbibmacro{in:}{%
+  \ifentrytype{article}{}{\printtext{\bibstring{in}\intitlepunct}}}
+% issue number in parentheses
+\usepackage{xpatch}
+% No dot before number of articles
+\xpatchbibmacro{volume+number+eid}{%
+  \setunit*{\adddot}%
+}{%
+}{}{}
+% Number of articles in parentheses
+\DeclareFieldFormat[article]{number}{\mkbibparens{#1}}
+
+\DeclareFieldFormat*{title}{#1}
+\DeclareFieldFormat{titlecase}{\MakeSentenceCase{#1}}
+\DeclareFieldFormat[article]{titlecase:journaltitle}{\mkbibitalic{#1}}
+
+% End of bibliography stuff
 
 \usepackage{titlesec} %Package for adjusting the fonts of the \section and \subsection and so forth.
 \titleformat{\section}{\Large\bfseries\sffamily}{\thesection.}{1em}{}
@@ -25,6 +51,7 @@
 \begin{document}
 \global\long\def\bpi{\bar{p}}%
 \global\long\def\upi{\underline{p}}%
+
 
 
 \section{Introduction}
@@ -48,31 +75,47 @@ Group reciprocity is important in several ways. Theoretically, interethnic
 peace may be sustained by the threat of reciprocation. This could have allowed
 humans to live in peace with neighbouring groups (perhaps punctuated by episodes of
 punitive conflict), whereas chimpanzees always attack neighbouring bands on 
-contact. It could also enable deeper forms of intergroup cooperation, such
-as trade. So, the capacity for group reciprocity may be a stepping stone in the
-evolution of humans as a cooperative species. 
+contact \citep{wrangham2012intergroup}. It could also enable deeper forms of intergroup cooperation, such as trade. So, the capacity for group reciprocity may be a 
+stepping stone in the evolution of humans as a cooperative species. 
 
-Group reciprocity is also related to generalized upstream reciprocity (XXX). 
-The literature has concluded that it is hard for generalized upstream 
-reciprocity to evolve except in special circumstances. So, our model
-could explain the existence of generalized upstream reciprocity in a limited form.
+Group reciprocity entails that individuals keep mental records of groups'
+past behaviour. These records could take the form of intergroup attitudes,
+including stereotypes \citep{brewer1985psychology}. Thus, an evolutionary 
+explanation for group reciprocity could also provide an explanation for why 
+humans do not just categorize people into groups but also hold attitudes 
+towards entire groups \citep{neuberg2008intergroup}.
 
-Practically, group reciprocity may underlie modern conflicts, including 
-interethnic violence \citep{horowitz1985ethnicgroups,horowitz2001thedeadly} and 
-civil wars \citep{haushofer_both_2010}. \citet{fearon1996explaining} show how
-interethnic peace may be sustained by the threat of intergroup conflict. We 
-replicate this insight in a different framework, using an evolutionary model 
-rather than their repeated game model.
+Group reciprocity is also related to generalized upstream reciprocity 
+or "paying it forward" \citep{boyd1989evolution,nowak2007upstream}. The 
+literature has concluded that it is hard for 
+generalized upstream reciprocity to evolve except in special circumstances. In
+our model, a bounded form of generalized upstream reciprocity can evolve, 
+because reciprocal cooperation between groups provides an evolutionary advantage
+to those groups. Without groups, generalized upstream reciprocity doesn't allow
+for this kind of group selection argument.
 
-Our result comes about as follows. Groups of group-reciprocators are able to
+Practically, understanding the evolutionary basis
+for intergroup categorization could help us to understand how it plays out 
+in modern settings. That includes the prejudice and stereotyping mentioned above,
+and also violent conflicts, including ethnic violence and civil war, where
+intergroup reciprocity may be involved 
+\citep{horowitz1985ethnicgroups,horowitz2001thedeadly,haushofer_both_2010}. 
+
+Here is the logic behind our result. Groups of group-reciprocators
 establish cooperative relationships with other groups of group-reciprocators,
-while they avoid cooperating with groups of selfish types. Selfish types within
+while they defect against groups of selfish types. So, when some people are 
+group reciprocators, individual fitness depends on one's group's reputation. Group 
+reciprocators contribute to this reputation, which is a group-level public good. 
+Thus being a group reciprocator is good for the group but costly for the individual. 
+This then gives rise to a standard group selection model, where the group-level
+advantages balance out the individual-level costs. Selfish free-riders within
 a group of mostly group-reciprocators get the highest payoff, but this is balanced
 out because most selfish types are in mostly-selfish groups, who have too
-few reciprocators to sustain cooperation.
+few reciprocators to sustain intergroup cooperation.
 
-We also use computations to check the robustness of our theoretical model. (XXX
-result preview.)
+We use computations to check the robustness of our theoretical model. Our
+results confirm that even in small populations, or with relatively rare interactions,
+group reciprocity can evolve.
 
 Our model shows how group reciprocity can evolve, and it also has some insights
 about how its form is shaped by evolutionary pressure. The most robust forms of
@@ -86,23 +129,8 @@ to small amounts of defection.
 
 \section{Literature review}
 
-
-Group reciprocity is a form of "upstream reciprocity", where an individual
-who is helped or harmed by someone becomes more likely to respectively help 
-or harm other third parties. It is thought hard for upstream reciprocity to evolve,
-because it does not target reciprocity in a way that might lead to stable 
-bilateral relationships \citep{nowak2007upstream}. We show that the existence
-of groups can make this problem easier, by allowing different \emph{groups} 
-to form bilateral relationships. This is true even though the groups don't
-possess any power of collective action (for instance, they can't collectively
-decide to sanction outgroups, or force their members to behave a certain way).
-Simply making individuals' group membership visible is enough to let group
-reciprocity evolve, because it lets people target help on groups whose members 
-have (mostly) been helpful.
-
 Several experiments show evidence for group reciprocity, also known as "vicarious
-revenge" \citep{lickel_vicarious_2006,gaertner2008whenrejection,stenstrom_roles_2008
-,hugh2017intergroup,hugh2019humans,romano2022direct}. There is also field 
+revenge" \citep{lickel_vicarious_2006,gaertner2008whenrejection,stenstrom_roles_2008,hugh2017intergroup,hugh2019humans,romano2022direct}. There is also field 
 evidence of reciprocity in violent intergroup conflict \citep{haushofer_both_2010}.
 Anthropologists have recorded feud institutions, where group reciprocity is a
 normative expectation and where there may be collective mechanisms for managing 
@@ -111,34 +139,57 @@ and adjudicating feuds \citep{boehm1984blood,chagnon1988lifehistories}.
 What we lack is a theory of how group reciprocity might evolve. While there
 are evolutionary theories to explain individual reciprocity and revenge
 \citep{mccullough2013cognitive}, there is none for group reciprocity. This is
-a problem, because one can't simply assume that the same forces are behind the evolution of individual reciprocity and group reciprocity. In particular, group
-reciprocity seems to be less targeted than individual reciprocity, and it also
-seems to involve a public good, since a person's cooperation against a group
-reciprocator subsequently benefits the person's entire group.
-\citet{petersen2010evolutionary} argue that group members "have an interest in
-advertising that victimizations of its members will not go unpunished", but this
-ignores the public good aspect of the problem.
+a problem, because one can't simply assume that the same forces are behind the evolution of 
+individual reciprocity and group reciprocity 
+\citep{pietraszewski2013elementary,mccullough2013putting}. 
+In particular, group reciprocity is a form of "upstream reciprocity", where an individual
+who is helped or harmed by someone becomes more likely to respectively help 
+or harm other third parties \citep{boyd1989evolution}. It is thought hard 
+for upstream reciprocity to evolve,
+because it does not target reciprocity in a way that might lead to stable 
+bilateral relationships \citep{nowak2007upstream}. 
 
-\citet{fearon1996explaining} introduce a repeated-game model to explain how
+We show that the existence of groups makes this problem easier, by allowing 
+different \emph{groups} to form bilateral relationships. This is true even 
+though the groups don't possess any power of collective action (for instance, 
+they can't collectively decide to sanction outgroups, or force their members 
+to behave a certain way). Simply making individuals' group membership visible is 
+enough to let group reciprocity evolve. Group reciprocity allows groups to 
+enter mutually beneficial cooperative relationships, achieving a fitness 
+advantage. This group selection logic does not apply when reciprocity is 
+targeted at the whole population.
+
+The logic of group reciprocity does not only explain group reciprocal motivations.
+An essential part of any group reciprocal model is that individuals keep mental 
+accounts of groups' previous behaviour, in some aggregate form. This mental
+accounting provides an evolutionary explanation for why humans hold intergroup 
+attitudes \citep{brewer1985psychology,kurzban2001can}. One simple descriptive 
+framework is that groups, like individuals, are perceived on the two dimensions of
+warmth and competence \citep{fiske2007universal}. Our model captures
+the warmth dimension. It also shows why a group-level measurement can be cognitively
+as important as individual-level characteristics: when humans are group-reciprocators,
+aggregated group characteristics (how often that group has cooperated
+with your group, and vice versa) predict individual behaviour better than individual
+characeristics (how often you have cooperated with this individual).
+
+\citet{fearon1996explaining} use a repeated-game framework, with 
+two classes of possible equilibria, to explain how
 different ethnic groups can live at peace. In their "spiral regime", defection
 by any member of ethnic group A towards a member of B leads to subsequent 
 defection by all members of B towards members of A for a fixed number of periods.
 This is an infinitely repeated game with multiple equilibria. The goal is to explain
 institutions which support interethnic cooperation; the spiral regime is analogous
-to institutions like feuds.
-
-Our theory has a different setup and motivation. We examine the evolutionary
-stability of different types in a finitely-repeated game. In Fearon and Laitin,
-cooperation is supported by the threat of collective punishment. In our model,
-group  reciprocity is evolutionarily stable because individual free-riding is
-balanced against group selection. That is, cooperating with cooperative outgroups
-benefits one's own group by encouraging the outgroup to cooperate in return. The 
-individual benefit of free-riding is balanced against this group benefit. When 
-the threshold for reciprocity is high, groups which get into cycles of cooperation
-with outgroups contain many reciprocators and few free-riders; most free-riders 
-are in groups below the threshold, which don't cooperate, and therefore they 
-don't benefit much from free-riding off the reciprocal types. So, our model
-is designed to explain the evolution of reciprocal ("strong" reciprocal) motivations in humans, rather than the stability of institutions supporting reciprocity.
+to institutions like feuds. Our theory has a different setup and motivation. 
+We examine the evolutionary stability of different types in a finitely-repeated game. 
+In Fearon and Laitin, cooperation is supported by the threat of collective 
+punishment. In our model, group reciprocity is evolutionarily stable because 
+individual free-riding is balanced against group selection. So, our model
+is designed to explain the evolution of "strong" reciprocal
+motivations in humans \citep{gintis2000strong}, rather than the 
+stability of institutions supporting interethnic peace. Ultimately, it is an 
+empirical question whether interethnic peace and conflict are best explained 
+by rational-actor models or by psychological models where "strong" reciprocity 
+plays a role.
 
 \section{Model}
 
@@ -219,8 +270,48 @@ where
 
 The LHS of \eqref{gr-wins} is decreasing in $p$ and is equal
 to the threshold $k$ when $p = 0$.\footnote{
-    When the share of GR in the population is very small, the probability that$p_g = k$ conditional on~$p_g\geq k$ goes to one.
+    When the share of GR in the population is very small, the probability that $p_g = k$ conditional on~$p_g\geq k$ goes to one.
 }
+
+\begin{proof}
+We will first prove an auxiliary lemma and then the main result.
+\begin{lemma}
+\label{lemma:eqiv_formulation}
+Let $x_1,x_2,...,x_n$ be iid Binomially-distributed variables with probability of success $p$, and let $x_i=1$ denote the event where $x_i$ fails. Then showing that $\frac{ \bpi - p}{ 1 - p}$ decreases in $p$ is equivalent to showing that $\frac{p(x_1=1|S_n \leq k)}{p(x_1=1)}$ increases in $p$, where $S_n=x_1+x_2+...+x_n$.
+\end{lemma}
+\textbf{Proof of Lemma \ref{lemma:eqiv_formulation}}
+
+First note that proving that the LHS of \eqref{gr-wins} is decreasing in $p$ is equivalent to proving that $1-\frac{ \bpi - p}{ 1 - p} = \frac{ 1- \bpi}{ 1 - p}$ is increasing in $p$. Second, note that 
+% if $p$ is the probability of success of a Binomially-distributed variable $x_i$, then 
+$1- \bpi$ captures the expected proportion of failures of a Binomially-distributed variable given that the proportion of successes was at least $k$, or, put differently, given that the proportion of failures was at most $k$. Finally, we can replace the expected proportion of failures with the probability of a failure. All in all, we get that proving that $\frac{ 1- \bpi}{ 1 - p}$ is increasing in $p$ is equivalent to showing that $\frac{p(x_1=1|S_n \leq k)}{p(x_1=1)}$ is increasing in $p$.
+% hence decreasing in $q$.
+\vspace{0.3cm}
+
+\textbf{Proving the main result}
+\vspace{0.3cm}
+
+Lemma \ref{lemma:eqiv_formulation} implies that if $x_i=1$ denotes the event where $x_i$ fails, and $S_n$ counts the number of failures among $n$ trials, then we need to show that $\frac{p(x_1=1|S_n \leq k)}{p(x_1=1)}$ increases in the probability of success $p$.
+For tractability, we will now revert to the more standard notation of $x_i=1$ as denoting the event where $x_i$ \textit{succeeds} (s.t. $S_n$ counts the number of successes among $n$ trials), and show that $\frac{p(x_1=1|S_n \leq k)}{p(x_1=1)}$ \textit{decreases} rather than increases in the probability of success $p$.
+\vspace{0.6 cm}
+
+\textbf{Proof}
+
+\vspace{0.3 cm}
+$\frac{p(x_1=1|S_n \leq k)}{p(x_1=1)}=\frac{p(s_n \leq k|x_1=1)}{p(s_n \leq k)}=\frac{p(s_{n-1} \leq k-1)}{qp(s_{n-1} \leq k)+pp(s_{n-1} \leq k-1)}$
+
+\vspace{0.3cm}
+$=\frac{p(s_{n-1} \leq k-1)}{q(p(s_{n-1} \leq k)-p(s_{n-1} \leq k-1))+p(s_{n-1} \leq k-1)}=\frac{p(s_{n-1} \leq k-1)}{qp(s_{n-1}=k)+p(s_{n-1} \leq k-1)}.$
+\vspace{0.3cm}
+
+Using a known result,\footnote{See equations (3) and (4) in https://mathworld.wolfram.com/BinomialDistribution.html.} according to which
+\begin{equation*}
+    p(s_n \leq k) = \frac{n!}{(n-k-1)!k!}\int_0^q t^{n-k-1}(1-t)^k dt = \frac{n!}{(n-k-1)!k!}\int_0^1 q^{n-k} s^{n-k-1} (1-qs)^k ds,
+\end{equation*}
+we get that $\frac{p(x_1=1|S_n \leq k)}{p(x_1=1)}$ is decreasing in $p$ if and only if $\frac{q \binom{n-1}{k} p^k q^{n-k-1}}{\frac{(n-1)!}{(n-k-1)!(k-1)!}\int_0^1 q^{n-k}s^{n-k-1}(1-qs)^{k-1} ds}$ is decreasing in $q$, i.e., if and only if $\frac{\binom{n-1}{k} p^k}{\frac{(n-1)!}{(n-k-1)!(k-1)!}\int_0^1 s^{n-k-1}(1-qs)^{k-1} ds}$ is decreasing in $q$.
+\vspace{0.3cm}
+Thus, it is sufficient to show that $\int_0^1 s^{n-k-1}(\frac{1-qs}{1-q})^{k-1}\frac{1}{1-q} ds$ is increasing in $q$. Since $(\frac{1-qs}{1-q})^{k-1}\frac{1}{1-q}$ is non-decreasing in $q$ for every $s \in [0,1]$, the proof is complete.
+
+\end{proof}
 %
 It follows that there is a unique ESS with a positive share of group
 reciprocators if and only if $k > \frac{c}{b}$. Otherwise the population is homogeneously selfish in the unique ESS.
