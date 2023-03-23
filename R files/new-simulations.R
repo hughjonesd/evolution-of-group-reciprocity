@@ -214,6 +214,58 @@ run_selection_process <- function (thresholds, payoffs, params) {
 
 stop("Tests below")
 
+## Basic tests ====
+
+# Idea: check that having finite number of groups, and finite T, still allows
+# GR to evolve; and that the basic k > c/b "comparative statics" still hold.
+# (I.e. we'd expect higher k, and lower c/b ratio, to make evolution of GR
+# more likely.)
+# 
+# Plan: run X experiments; in each run 100 generations
+#  take the proportion of Gr at the end; 
+
+basic_params <- expand.grid(
+                  b = c(2, 5), 
+                  c = 1, 
+                  G = 8, 
+                  n_groups = c(10, 50),
+                  T_rounds = c(10, 20), 
+                  k = c(0.4, 0.8), 
+                  generations = 100,
+                  experiment = 1:20 # 20 experiments takes about 7 mins
+                )
+
+prop_gr <- basic_params |> 
+           select(-experiment) |> 
+           purrr::pmap(run_simulation, .progress = TRUE) |> 
+           purrr::map_dbl(\(x) mean(x < 1))
+
+basic_params$prop_gr <- prop_gr
+basic_results <- basic_params |> 
+                 group_by(b, n_groups, T_rounds, k) |>
+                 summarize(
+                   mean_gr = mean(prop_gr),
+                   prop_fix_0 = mean(prop_gr == 0),
+                   prop_fix_1 = mean(prop_gr >= 1)
+                 )
+
+library(ggplot2)
+basic_results |> 
+  mutate(
+    `N groups` = factor(n_groups),
+    `T` = factor(T_rounds),
+    Condition = glue::glue("{T_rounds} rounds, {n_groups} groups"),
+    `c/b` = factor(1/b, levels = c(0.2, 0.5)),
+    k = factor(k)
+  ) |> 
+  ggplot(aes(x = `c/b`, y = mean_gr, shape = k, color = k)) + 
+    facet_grid(vars(`N groups`), vars(`T`), labeller = label_both) + 
+    geom_point(size = 3, position = position_dodge(width = 0.1)) + 
+    theme_linedraw() + labs(y = "Prop. GR types")
+
+ggsave("R files/basic-experiment.jpeg", width = 5, height = 4)
+
+## Experiments ====
 
 # experiments to run:
 # * vary n_groups
@@ -244,6 +296,9 @@ prop_gr <- params |>
 
 params$prop_gr <- prop_gr
 params$rep <- 1:n_reps
+
+
+## Graphs ====
 
 library(ggplot2)
 

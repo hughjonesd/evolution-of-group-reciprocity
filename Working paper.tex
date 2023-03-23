@@ -332,6 +332,33 @@ Thus, it is sufficient to show that $\int_0^1 s^{n-k-1}(\frac{1-qs}{1-q})^{k-1}\
 It follows that there is a unique ESS with a positive share of group
 reciprocators if and only if $k > \frac{c}{b}$. Otherwise the population is homogeneously selfish in the unique ESS.
 
+\subsection{Simulations}
+
+The model includes two simplifying assumptions: a large number of groups, and a large
+number of rounds $T$ in each generation. To check how these simplifications affect
+the result, we run simulations. We use the following sets of parameters:
+$c/b = 0.2, 0.5$; $T = 10, 20$; N groups = $10, 50$; $k = 0.4, 0.8$. This gives
+16 unique combinations of parameters. We always set $G = 8$.
+For each combination we run 20 experiments, each of 100 generations. After
+100 generations we record the proportion of group reciprocators. Note that
+in a finite population, either selfish or GR types will always go to fixation
+eventually. 
+
+Figure \ref{fig:sims} shows the mean proportion of GR types across all experiments for
+each combination of parameters. A shorter number of periods $T$ leads to fewer 
+GR types, as expected since it gives more weight to the early-round losses of GR 
+types. The number of groups does not seem to affect the evolution of GR types. As
+expect, a higher cost-benefit ratio $c/b$ leads to fewer GR types. A higher threshold $k$
+also usually leads to more GR types, and in particular when $k < c/b$, group reciprocity
+never evolves. One exception is with 50 groups and $T = 20$: in this case,
+more group reciprocators evolve when $k$ is lower.
+
+\begin{figure}[h]
+  \caption{Simulation results. Plots show proportions of group reciprocator types after 100 generations.}
+  \label{fig:sims}
+  \centering
+    \includegraphics[height=4in]{R files/basic-experiment.jpeg}
+\end{figure}
 \end{document}
 %%% THE REST OF THE ATTEMPTS TO PROVE ARE IN THE SEPARATE FILE
 
