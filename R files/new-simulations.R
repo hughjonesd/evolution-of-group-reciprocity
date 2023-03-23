@@ -224,6 +224,8 @@ stop("Tests below")
 # Plan: run X experiments; in each run 100 generations
 #  take the proportion of Gr at the end; 
 
+set.seed(27101975)
+
 basic_params <- expand.grid(
                   b = c(2, 5), 
                   c = 1, 
@@ -235,7 +237,7 @@ basic_params <- expand.grid(
                   experiment = 1:20 # 16x20 experiments takes about 15 mins with 500 gens
                 )
 
-basic_params$prop_gr <- basic_params |> 
+basic_params$prop_gr_final <- basic_params |> 
                         select(-experiment) |> 
                         purrr::pmap(run_simulation, .progress = TRUE) |> 
                         purrr::map_dbl(\(x) mean(x < 1))
@@ -244,9 +246,9 @@ basic_params$prop_gr <- basic_params |>
 basic_results <- basic_params |> 
                  group_by(b, n_groups, T_rounds, k) |>
                  summarize(
-                   mean_gr = mean(prop_gr),
-                   prop_fix_0 = mean(prop_gr == 0),
-                   prop_fix_1 = mean(prop_gr >= 1),
+                   mean_gr = mean(prop_gr_final),
+                   prop_fix_0 = mean(prop_gr_final == 0),
+                   prop_fix_1 = mean(prop_gr_final >= 1),
                    prop_fix = prop_fix_0 + prop_fix_1
                  )
 
@@ -266,101 +268,23 @@ basic_results |>
 
 ggsave("R files/basic-experiment.jpeg", width = 5, height = 4)
 
-## Experiments ====
 
-# experiments to run:
-# * vary n_groups
-# * vary T_rounds
-# * vary q
-# 
+## Large groups ====
 
-params <- data.frame(b = 5, c = 1, G = 8, n_groups = 50, k = 0.5, T_rounds = 20,
-                     q = 0, generations = 100)
+group_size <- data.frame(
+                b = 10, 
+                c = 1, 
+                G = 40, 
+                n_groups = 40,
+                T_rounds = 20, 
+                k = 0.6, 
+                generations = 500,
+                prop_gr = 0.6,
+                experiment = 1:10
+              )
 
-params <- bind_rows(
-  Basic    = params,
-  `High k = 0.7`    = params |> mutate(k = 0.7),
-  `High G = 16`     = params |> mutate(G = 16),
-  `Few groups = 20` = params |> mutate(n_groups = 20),
-  `Short T = 10`    = params |> mutate(T_rounds = 10),
-  `Local selection q = 0.25` = params |> mutate(q = 0.25),
-  .id = "variant"
-)
+group_size$prop_gr_final <- group_size |> 
+                            select(-experiment) |> 
+                            purrr::pmap(run_simulation, .progress = TRUE) |> 
+                            purrr::map_dbl(\(x) mean(x < 1))
 
-n_reps <- 30
-params <- params[rep(1:nrow(params), n_reps), ]
-
-prop_gr <- params |> 
-           select(-variant) |> 
-           purrr::pmap(run_simulation) |> 
-           purrr::map_dbl(\(x) mean(x < 1))
-
-params$prop_gr <- prop_gr
-params$rep <- 1:n_reps
-
-
-## Graphs ====
-
-library(ggplot2)
-
-ggplot(params, aes(variant, prop_gr, color = variant)) + 
-  geom_point(alpha = 0.5) + 
-  stat_summary(fun = mean, shape = "cross", size = 1.3) + 
-  labs(y = "Prop. GR types") +
-  theme_minimal() +
-  theme(legend.position = "none", text = element_text(size = 12))
-
-# a simulation with large groups
-# starting with high k and many initial GR types helps, since then
-# there are likely to be some supraliminal groups, but not many
-# free riders in them
-big <- run_simulation(b = 5, c = 1, 
-                      k = 0.9, prop_gr = 0.9,
-                      G = 40, n_groups = 20, 
-                      T_rounds = 20,  q = 0, generations = 1000)
-
-
-# a simulation with many starting thresholds and 25% selfish
-# this typically reduces to one or two types, which suggests there's a coordination
-# advantage to being the same type as others
-poly <- run_simulation(b = 5, c = 1, 
-                      initial_thresholds = sample(c(runif(300), rep(1, 100))),
-                      G = 8, n_groups = 50, 
-                      T_rounds = 20,  q = 0, generations = 1000)
-
-polys <- replicate(20, {
-          run_simulation(b = 5, c = 1, 
-                        initial_thresholds = sample(c(runif(300), rep(1, 100))),
-                        G = 8, n_groups = 50, 
-                        T_rounds = 20,  q = 0, generations = 500)
-        })
-apply(polys, 2, \(x) length(unique(x)))
-min_and_max <- apply(polys, 2, range)
-data.frame(min = min_and_max[1,], max = min_and_max[2,]) |> 
-  arrange(max, min) |> 
-  mutate(rep = 1:20) |> 
-  ggplot() + 
-    geom_segment(aes(x = rep, xend = rep, y = min, yend = max)) +
-    geom_point(aes(x = rep, y = min)) + 
-    geom_point(aes(x = rep, y = max)) + 
-    labs(y = "Thresholds", x = "Simulation")
-
-
-
-# approximating the model: many groups, small groups (for speed), largish T,
-# vary k around c/b, many generations
-
-model <- data.frame(
-  k = rep(c(1/4, 1/3, 1/2) + 0.01, each = 3),
-  b = rep(2:4, 3),
-  c = 1,
-  T_rounds = 50,
-  generations = 1000,
-  n_groups = 150,
-  G = 12
-)
-model$prop_gr <- model$k
-
-prop_gr <- model |> 
-           purrr::pmap(run_simulation) |> 
-           purrr::map_dbl(\(x) mean(x < 1))
