@@ -203,9 +203,9 @@ individual free-riding is balanced against group selection. So, our model
 is designed to explain the evolution of "strong" reciprocal
 motivations in humans \citep{gintis2000strong}, rather than the 
 stability of institutions supporting interethnic peace. Ultimately, it is an 
-empirical question whether interethnic peace and conflict are best explained 
-by rational-actor models or by psychological models where "strong" reciprocity 
-plays a role.
+empirical question whether intergroup peace and conflict are best explained 
+by rational-actor models, psychological models with "strong" reciprocity,
+or a combination of both.
 
 \section{Model}
 
@@ -235,11 +235,17 @@ $$
         0   &   \text{otherwise.}
     \end{cases}
 $$
-The fitness is the payoff at the limit where~$t\to\infty$. Equivalently, since the game always settles to a stationary action profile, it is the average payoff of~$T$ rounds when~$T\to\infty$.
 
-Given this behaviour, GR in all groups where $p_g \geq k$ help all individuals in other groups where $p_g \geq k$ and defect against members of all other groups. GR in other groups always defect.
+Equilibrium in this game is as follows: in period 1, group reciprocators help
+everyone. In period 2, all group reciprocators help those in ``supraliminal"
+groups with $p_g \geq k$. In periods 3 and above, group reciprocators in supraliminal
+groups help those in supraliminal groups; they defect against everyone else,
+and all other individuals defect.
+
+The fitness is the payoff at the limit where~$t\to\infty$. Equivalently, since the game always settles to a stationary action profile, it is the average payoff of~$T$ rounds when~$T\to\infty$. 
+
 %
-Individuals' fitness therefore depends only on whether they are in a ``supraliminal" group with $p_g \geq k$, and on their type. Let~$q$ be the 
+Individuals' fitness therefore depends only on whether they are in a ``supraliminal" group, and on their type. Let~$q$ be the 
 proportion of supraliminal groups. Let~$\bpi$ be the proportion of 
 GR individuals in supraliminal groups (out of the total population in such groups). Let~$\upi$ be the proportion of GR individuals in subliminal groups (out of the total population in such groups). It follows that
 \begin{itemize}
