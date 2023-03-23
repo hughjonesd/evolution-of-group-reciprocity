@@ -25,6 +25,7 @@
 
 library(dplyr)
 library(purrr)
+library(ggplot2)
 
 #' Run a single simulation with specific parameters
 #'
@@ -252,7 +253,6 @@ basic_results <- basic_params |>
                    prop_fix = prop_fix_0 + prop_fix_1
                  )
 
-library(ggplot2)
 basic_results |> 
   mutate(
     `N groups` = factor(n_groups),
@@ -288,3 +288,70 @@ group_size$prop_gr_final <- group_size |>
                             purrr::pmap(run_simulation, .progress = TRUE) |> 
                             purrr::map_dbl(\(x) mean(x < 1))
 
+
+## Finding the state space ==== 
+
+# The idea: rather than running multiple generations,
+# we just start with a given prop_gr and run 1 generation
+# many times. This gives us the state space. In particular if
+# we take the mean prop GR after 1 generation then we could
+# think of this as a large metapopulation of many populations
+# (who would all reform after 1 generation); and draw the phase
+# diagram so that prop GR is increasing when the mean final prop is
+# above the init prop
+# 
+
+map_state_space <- function (..., nreps = 20) {
+  params <- expand.grid(..., 
+                        generations = 1,
+                        prop_gr = seq(0.05, 0.95, 0.05), 
+                        experiment = seq_len(nreps))
+  params$prop_gr_final <- params |> 
+                          select(-experiment) |> 
+                          purrr::pmap(run_simulation, .progress = TRUE) |> 
+                          purrr::map_dbl(\(x) mean(x < 1))
+  
+  params |> 
+    group_by(across(c(-experiment, -prop_gr_final, -generations))) |> 
+    summarize(
+      mean_gr_final = mean(prop_gr_final),
+      incr_gr_final = mean_gr_final - prop_gr,
+      se_gr_final = sd(prop_gr_final)/sqrt(nreps)
+    )
+}
+
+
+
+
+ss <- map_state_space(b = c(2, 5, 8), c = 1, k = c(0.4, 0.6, 0.8), G = 8, 
+                      n_groups = 20, T_rounds = c(10, 20), 
+                      nreps = 100)
+
+
+ss |> 
+  mutate(
+    inc_gr = mean_gr_final - prop_gr
+  ) |> 
+  ggplot(aes(x = prop_gr, y = inc_gr, color = factor(k), group =k)) + 
+    geom_abline(intercept = 0, slope = 0) +
+    geom_line() +
+    geom_pointrange(aes(ymax = inc_gr + 1.96*se_gr_final, 
+                        ymin = inc_gr - 1.96*se_gr_final), size = 0.3) +
+    facet_grid(vars(T_rounds), vars(b), labeller = label_both) +
+    theme_linedraw()
+  
+
+ss2 <- map_state_space(b = 8, c = 1, k = c(0.4, 0.8), G = c(8, 16, 24), 
+                      n_groups = c(10, 20), T_rounds = 10, nreps = 100)
+
+ss2 |> 
+  mutate(
+    inc_gr = mean_gr_final - prop_gr
+  ) |> 
+  ggplot(aes(x = prop_gr, y = inc_gr, color = factor(k), group = k)) + 
+    geom_abline(intercept = 0, slope = 0) +
+    geom_line() +
+    geom_pointrange(aes(ymax = inc_gr + 1.96*se_gr_final, 
+                        ymin = inc_gr - 1.96*se_gr_final), size = 0.3) +
+    facet_grid(vars(n_groups), vars(G), labeller = label_both) +
+    theme_linedraw()
