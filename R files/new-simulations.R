@@ -231,22 +231,23 @@ basic_params <- expand.grid(
                   n_groups = c(10, 50),
                   T_rounds = c(10, 20), 
                   k = c(0.4, 0.8), 
-                  generations = 100,
-                  experiment = 1:20 # 20 experiments takes about 7 mins
+                  generations = 500,
+                  experiment = 1:20 # 16x20 experiments takes about 15 mins with 500 gens
                 )
 
-prop_gr <- basic_params |> 
-           select(-experiment) |> 
-           purrr::pmap(run_simulation, .progress = TRUE) |> 
-           purrr::map_dbl(\(x) mean(x < 1))
+basic_params$prop_gr <- basic_params |> 
+                        select(-experiment) |> 
+                        purrr::pmap(run_simulation, .progress = TRUE) |> 
+                        purrr::map_dbl(\(x) mean(x < 1))
 
-basic_params$prop_gr <- prop_gr
+
 basic_results <- basic_params |> 
                  group_by(b, n_groups, T_rounds, k) |>
                  summarize(
                    mean_gr = mean(prop_gr),
                    prop_fix_0 = mean(prop_gr == 0),
-                   prop_fix_1 = mean(prop_gr >= 1)
+                   prop_fix_1 = mean(prop_gr >= 1),
+                   prop_fix = prop_fix_0 + prop_fix_1
                  )
 
 library(ggplot2)

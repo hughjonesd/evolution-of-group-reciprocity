@@ -339,19 +339,23 @@ number of rounds $T$ in each generation. To check how these simplifications affe
 the result, we run simulations. We use the following sets of parameters:
 $c/b = 0.2, 0.5$; $T = 10, 20$; N groups = $10, 50$; $k = 0.4, 0.8$. This gives
 16 unique combinations of parameters. We always set $G = 8$.
-For each combination we run 20 experiments, each of 100 generations. After
-100 generations we record the proportion of group reciprocators. Note that
-in a finite population, either selfish or GR types will always go to fixation
-eventually. 
+For each combination we run 20 experiments, each of 500 generations. After
+500 generations we record the proportion of group reciprocators. 
 
 Figure \ref{fig:sims} shows the mean proportion of GR types across all experiments for
-each combination of parameters. A shorter number of periods $T$ leads to fewer 
+each combination of parameters. For all combinations of parameters but one,
+either GR types or selfish types always went to fixation within 500 rounds. In
+these cases, the proportion of GR types is just the proportion of experiments
+where GR types went to fixation.
+
+A shorter number of periods $T$ leads to fewer 
 GR types, as expected since it gives more weight to the early-round losses of GR 
 types. The number of groups does not seem to affect the evolution of GR types. As
 expect, a higher cost-benefit ratio $c/b$ leads to fewer GR types. A higher threshold $k$
 also usually leads to more GR types, and in particular when $k < c/b$, group reciprocity
 never evolves. One exception is with 50 groups and $T = 20$: in this case,
-more group reciprocators evolve when $k$ is lower.
+more group reciprocators evolve when $k = 0.4$. This is also the sole
+parameter combination where not all experiments went to fixation.
 
 \begin{figure}[h]
   \caption{Simulation results. Plots show proportions of group reciprocator types after 100 generations.}
