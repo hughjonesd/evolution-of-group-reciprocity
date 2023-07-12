@@ -8,6 +8,9 @@
 \usepackage{setspace}
 \newcolumntype{x}{>{\centering\arraybackslash}X}
 
+
+\newtheorem{theo}{Theorem}
+\newtheorem{prop}[theo]{Proposition}
 \newtheorem{lemma}{Lemma}
 
 \usepackage{fontspec,xunicode}
@@ -227,7 +230,7 @@ At every step~$t$, everybody interacts with everybody. In each pair, each indivi
     \end{tabularx}
 \end{center}
 
-Selfish types always defect, A GR individual~$i$ starts by cooperating, and then cooperates with all individuals belonging to group~$g$ with a probability~$\phi(l_{gi})$, where~$l_{gi}$ is the proportion of individuals from group~$g$ who cooperated with individual~$i$ in round $t-1$.
+Selfish types always defect. A GR individual~$i$ starts by cooperating, and then cooperates with all individuals belonging to group~$g$ with a probability~$\phi(l_{gi})$, where~$l_{gi}$ is the proportion of individuals from group~$g$ who cooperated with individual~$i$ in round $t-1$.
 $\phi(\cdot)$ is monotonically weakly increasing. We consider the cutoff strategy: 
 $$
     \phi(l_{gi}) =
@@ -291,51 +294,18 @@ where
 \bpi = E[p_g | p_g \ge k] = \frac{1}{G} \frac{\sum_{l=kG}^G l \mathrm{Binom}(l,G,p)}{\sum_{l=kG}^G \mathrm{Binom}(l,G,p)}
 \]
 
-The LHS of \eqref{gr-wins} is decreasing in $p$ and is equal
+\begin{prop}
+\label{prop:decrease_in_p}
+    The LHS of equation \eqref{gr-wins} is decreasing in $p$ and is equal
 to the threshold $k$ when $p = 0$.\footnote{
     When the share of GR in the population is very small, the probability that $p_g = k$ conditional on~$p_g\geq k$ goes to one.
 }
+\end{prop}
 
 \begin{proof}
-We will first prove an auxiliary lemma and then the main result.
-\begin{lemma}
-\label{lemma:eqiv_formulation}
-Let $x_1,x_2,...,x_n$ be iid Binomially-distributed variables with probability of success $p$, and let $x_i=1$ denote the event where $x_i$ fails. Then showing that $\frac{ \bpi - p}{ 1 - p}$ decreases in $p$ is equivalent to showing that $\frac{p(x_1=1|S_n \leq k)}{p(x_1=1)}$ increases in $p$, where $S_n=x_1+x_2+...+x_n$.
-\end{lemma}
-\textbf{Proof of Lemma \ref{lemma:eqiv_formulation}}
-
-First note that proving that the LHS of \eqref{gr-wins} is decreasing in $p$ is equivalent to proving that $1-\frac{ \bpi - p}{ 1 - p} = \frac{ 1- \bpi}{ 1 - p}$ is increasing in $p$. Second, note that 
-% if $p$ is the probability of success of a Binomially-distributed variable $x_i$, then 
-$1- \bpi$ captures the expected proportion of failures of a Binomially-distributed variable given that the proportion of successes was at least $k$, or, put differently, given that the proportion of failures was at most $k$. Finally, we can replace the expected proportion of failures with the probability of a failure. All in all, we get that proving that $\frac{ 1- \bpi}{ 1 - p}$ is increasing in $p$ is equivalent to showing that $\frac{p(x_1=1|S_n \leq k)}{p(x_1=1)}$ is increasing in $p$.
-% hence decreasing in $q$.
-\vspace{0.3cm}
-
-\textbf{Proving the main result}
-\vspace{0.3cm}
-
-Lemma \ref{lemma:eqiv_formulation} implies that if $x_i=1$ denotes the event where $x_i$ fails, and $S_n$ counts the number of failures among $n$ trials, then we need to show that $\frac{p(x_1=1|S_n \leq k)}{p(x_1=1)}$ increases in the probability of success $p$.
-For tractability, we will now revert to the more standard notation of $x_i=1$ as denoting the event where $x_i$ \textit{succeeds} (s.t. $S_n$ counts the number of successes among $n$ trials), and show that $\frac{p(x_1=1|S_n \leq k)}{p(x_1=1)}$ \textit{decreases} rather than increases in the probability of success $p$.
-\vspace{0.6 cm}
-
-\textbf{Proof}
-
-\vspace{0.3 cm}
-$\frac{p(x_1=1|S_n \leq k)}{p(x_1=1)}=\frac{p(s_n \leq k|x_1=1)}{p(s_n \leq k)}=\frac{p(s_{n-1} \leq k-1)}{qp(s_{n-1} \leq k)+pp(s_{n-1} \leq k-1)}$
-
-\vspace{0.3cm}
-$=\frac{p(s_{n-1} \leq k-1)}{q(p(s_{n-1} \leq k)-p(s_{n-1} \leq k-1))+p(s_{n-1} \leq k-1)}=\frac{p(s_{n-1} \leq k-1)}{qp(s_{n-1}=k)+p(s_{n-1} \leq k-1)}.$
-\vspace{0.3cm}
-
-Using a known result,\footnote{See equations (3) and (4) in https://mathworld.wolfram.com/BinomialDistribution.html.} according to which
-\begin{equation*}
-    p(s_n \leq k) = \frac{n!}{(n-k-1)!k!}\int_0^q t^{n-k-1}(1-t)^k dt = \frac{n!}{(n-k-1)!k!}\int_0^1 q^{n-k} s^{n-k-1} (1-qs)^k ds,
-\end{equation*}
-we get that $\frac{p(x_1=1|S_n \leq k)}{p(x_1=1)}$ is decreasing in $p$ if and only if $\frac{q \binom{n-1}{k} p^k q^{n-k-1}}{\frac{(n-1)!}{(n-k-1)!(k-1)!}\int_0^1 q^{n-k}s^{n-k-1}(1-qs)^{k-1} ds}$ is decreasing in $q$, i.e., if and only if $\frac{\binom{n-1}{k} p^k}{\frac{(n-1)!}{(n-k-1)!(k-1)!}\int_0^1 s^{n-k-1}(1-qs)^{k-1} ds}$ is decreasing in $q$.
-\vspace{0.3cm}
-Thus, it is sufficient to show that $\int_0^1 s^{n-k-1}(\frac{1-qs}{1-q})^{k-1}\frac{1}{1-q} ds$ is increasing in $q$. Since $(\frac{1-qs}{1-q})^{k-1}\frac{1}{1-q}$ is non-decreasing in $q$ for every $s \in [0,1]$, the proof is complete.
-
+    See Appendix.
 \end{proof}
-%
+
 It follows that there is a unique ESS with a positive share of group
 reciprocators if and only if $k > \frac{c}{b}$. Otherwise the population is homogeneously selfish in the unique ESS.
 
@@ -409,6 +379,73 @@ examine group reciprocity in the field, among groups which lack institutions
 for collective action.
 
 \printbibliography
+
+
+\newpage
+\appendix
+\renewcommand*\thetable{\Alph{section}.\arabic{table}}
+\renewcommand*\thefigure{\Alph{section}.\arabic{figure}}
+\setcounter{figure}{0}
+\setcounter{table}{0}
+\setcounter{equation}{0}
+\numberwithin{equation}{section}
+\section{Proofs}
+\label{sec:proofs}
+\subsection{Proof of Proposition \ref{prop:decrease_in_p}}
+We will first prove an auxiliary lemma and then the main result.
+\begin{lemma}
+\label{lemma:eqiv_formulation}
+Let $x_1,x_2,...,x_n$ be iid Binomially-distributed variables with probability of success $p$, and let $x_i=1$ denote the event where $x_i$ fails. Then showing that $\frac{ \bpi - p}{ 1 - p}$ decreases in $p$ is equivalent to showing that $\frac{p(x_1=1|S_n \leq k)}{p(x_1=1)}$ increases in $p$, where $S_n=x_1+x_2+...+x_n$.
+\end{lemma}
+% \noindent \textbf{Proof of Lemma \ref{lemma:eqiv_formulation}}
+\begin{proof}
+First note that proving that the LHS of \eqref{gr-wins} is decreasing in $p$ is equivalent to proving that $1-\frac{ \bpi - p}{ 1 - p} = \frac{ 1- \bpi}{ 1 - p}$ is increasing in $p$. Second, note that 
+% if $p$ is the probability of success of a Binomially-distributed variable $x_i$, then 
+$1- \bpi$ captures the expected proportion of failures of a Binomially-distributed variable given that the proportion of successes was at least $k$, or, put differently, given that the proportion of failures was at most $k$. Finally, we can replace the expected proportion of failures with the probability of a failure. All in all, we get that proving that $\frac{ 1- \bpi}{ 1 - p}$ is increasing in $p$ is equivalent to showing that $\frac{p(x_1=1|S_n \leq k)}{p(x_1=1)}$ is increasing in $p$.
+% hence decreasing in $q$.
+\end{proof}
+\vspace{0.3cm}
+
+\noindent \textbf{Proving the proposition}
+\vspace{0.3cm}
+
+\begin{proof}
+Lemma \ref{lemma:eqiv_formulation} implies that if $x_i=1$ denotes the event where $x_i$ fails, and $S_n$ counts the number of failures among $n$ trials, then we need to show that $\frac{p(x_1=1|S_n \leq k)}{p(x_1=1)}$ increases in the probability of success $p$.
+For tractability, we will now revert to the more standard notation of $x_i=1$ as denoting the event where $x_i$ \textit{succeeds} (s.t. $S_n$ counts the number of successes among $n$ trials), and show that $\frac{p(x_1=1|S_n \leq k)}{p(x_1=1)}$ \textit{decreases} rather than increases in the probability of success $p$.
+\vspace{0.6 cm}
+
+\noindent \textbf{Version 1}
+
+\begin{equation*}
+    \frac{p(x_1=1|S_n \leq k)}{p(x_1=1)}=\frac{p(s_n \leq k|x_1=1)}{p(s_n \leq k)}=\frac{p(s_{n-1} \leq k-1)}{qp(s_{n-1} \leq k)+pp(s_{n-1} \leq k-1)}
+\end{equation*}
+
+
+\begin{equation*}
+    =\frac{p(s_{n-1} \leq k-1)}{q(p(s_{n-1} \leq k)-p(s_{n-1} \leq k-1))+p(s_{n-1} \leq k-1)}=\frac{p(s_{n-1} \leq k-1)}{qp(s_{n-1}=k)+p(s_{n-1} \leq k-1)}.
+\end{equation*}
+
+
+\vspace{0.3 cm}
+\noindent \textbf{Version 2}
+\vspace{0.6 cm}
+
+$\frac{p(x_1=1|S_n \leq k)}{p(x_1=1)}=\frac{p(s_n \leq k|x_1=1)}{p(s_n \leq k)}=\frac{p(s_{n-1} \leq k-1)}{qp(s_{n-1} \leq k)+pp(s_{n-1} \leq k-1)}$
+
+\vspace{0.3cm}
+$=\frac{p(s_{n-1} \leq k-1)}{q(p(s_{n-1} \leq k)-p(s_{n-1} \leq k-1))+p(s_{n-1} \leq k-1)}=\frac{p(s_{n-1} \leq k-1)}{qp(s_{n-1}=k)+p(s_{n-1} \leq k-1)}.$
+\vspace{1 cm}
+
+\noindent 
+Using a known result,\footnote{See equations (3) and (4) in https://mathworld.wolfram.com/BinomialDistribution.html.} according to which
+\begin{equation*}
+    p(s_n \leq k) = \frac{n!}{(n-k-1)!k!}\int_0^q t^{n-k-1}(1-t)^k dt = \frac{n!}{(n-k-1)!k!}\int_0^1 q^{n-k} s^{n-k-1} (1-qs)^k ds,
+\end{equation*}
+we get that $\frac{p(x_1=1|S_n \leq k)}{p(x_1=1)}$ is decreasing in $p$ if and only if $\frac{q \binom{n-1}{k} p^k q^{n-k-1}}{\frac{(n-1)!}{(n-k-1)!(k-1)!}\int_0^1 q^{n-k}s^{n-k-1}(1-qs)^{k-1} ds}$ is decreasing in $q$, i.e., if and only if $\frac{\binom{n-1}{k} p^k}{\frac{(n-1)!}{(n-k-1)!(k-1)!}\int_0^1 s^{n-k-1}(1-qs)^{k-1} ds}$ is decreasing in $q$.
+\vspace{0.3cm}
+Thus, it is sufficient to show that $\int_0^1 s^{n-k-1}(\frac{1-qs}{1-q})^{k-1}\frac{1}{1-q} ds$ is increasing in $q$. Since $(\frac{1-qs}{1-q})^{k-1}\frac{1}{1-q}$ is non-decreasing in $q$ for every $s \in [0,1]$, the proof is complete.
+
+\end{proof}
 
 \end{document}
 %%% THE REST OF THE ATTEMPTS TO PROVE ARE IN THE SEPARATE FILE
