@@ -257,8 +257,8 @@ Individuals' fitness therefore depends only on whether they are in a ``supralimi
 proportion of supraliminal groups. Let~$\bpi$ be the proportion of 
 GR individuals in supraliminal groups (out of the total population in such groups). Let~$\upi$ be the proportion of GR individuals in subliminal groups (out of the total population in such groups). It follows that
 \begin{itemize}
-    \item Group reciprocators in supraliminal groups get a payoff of~$(\bpi qb - qc)\mm{N}$ \mm{$= \Sigma_{l_g =k}^n[l_gb-nc]$}.
-    \item Selfish types in supraliminal groups get~$\bpi qb\mm{N}$ \mm{$= \Sigma_{l_g =k}^nl_gb$}.
+    \item Group reciprocators in supraliminal groups get a payoff of~$(\bpi qb - qc)\mm{N}$ \mm{$= \Sigma_{\{g|l_g \geq k\}}[l_gb-nc]$}.
+    \item Selfish types in supraliminal groups get~$\bpi qb\mm{N}$ \mm{$= \Sigma_{\{g|l_g \geq k\}}l_gb$}.
     \item Group reciprocators and selfish types in subliminal groups get~$0$.
 \end{itemize}
 
@@ -272,7 +272,7 @@ The mean fitness of the GR type is
 }{
   p
 }
-\mm{=\frac{\Sigma_{l_g =k}^nl_g \Sigma_{l_g =k}^n[l_gb-nc]}{\Sigma_{l_g =0}^nl_g}}
+\mm{=\frac{\Sigma_{\{g|l_g \geq k\}}l_g \Sigma_{\{g|l_g \geq k\}}[l_gb-nc]}{\Sigma_gl_g}}
 \end{equation*}
 
 and the mean fitness of selfish types is
@@ -283,7 +283,7 @@ and the mean fitness of selfish types is
 }{
   1 - p
 }
-\mm{=\frac{\Sigma_{l_g =k}^n(n-l_g) \Sigma_{l_g =k}^nl_gb}{\Sigma_{l_g =0}^n(n-l_g)}}
+\mm{=\frac{\Sigma_{\{g|l_g \geq k\}}(n-l_g) \Sigma_{\{g|l_g \geq k\}}l_gb}{\Sigma_g(n-l_g)}}
 \end{equation*}
 
 After rearranging, the mean fitness of reciprocators is higher if
@@ -292,25 +292,49 @@ After rearranging, the mean fitness of reciprocators is higher if
 \begin{equation}
 \label{gr-wins}
 \frac{ \bpi - p}{ 1 - p} \ge \frac{c}{b}
-\mm{\Longleftrightarrow \frac{N\Sigma_{l_g =k}^nl_g-M\Sigma_{l_g =0}^nl_g}{N-M\Sigma_{l_g =0}^nl_g} \ge M\frac{b}{c}}.
+\mm{\Longleftrightarrow \frac{N\Sigma_{\{g|l_g \geq k\}}l_g-M\Sigma_gl_g}{N-\Sigma_gl_g} \ge M\frac{b}{c}}.
 \end{equation}
 
-where \mm{$M \equiv qN=\Sigma_{l_g =k}^nn$ and 
+where \mm{$M \equiv qN=\Sigma_{\{g|l_g \geq k\}}n$ and 
 
 \[
-\bpi = \frac{\Sigma_{l_g =k}^nl_g}{M}
+\bpi = \frac{\Sigma_{\{g|l_g \geq k\}}l_g}{M}
 \]}
 
 \begin{prop}
 \label{prop:decrease_in_p}
-    The LHS of equation \eqref{gr-wins} is decreasing in $p$ and is equal
-to the threshold $k$ when $p = 0$.\footnote{
+    \mm{If $M \neq \emptyset$, then} the LHS of equation \eqref{gr-wins} is decreasing in $p=\mm{\frac{\Sigma_gl_g}{N}}$ \sout{and is equal
+to the threshold $k$ when $p = 0$}.\footnote{\sout{
     When the share of GR in the population is very small, the probability that $p_g = k$ conditional on~$p_g\geq k$ goes to one.
-}
+}}
 \end{prop}
 
 \begin{proof}
     See Appendix.
+    
+    \mm{
+    First rewrite the LHS of \eqref{gr-wins} as follows: $LHS=M-Nx$, where $x \equiv \frac{\Sigma_{\{g|l_g \geq k\}}(n-l_g)}{N-\Sigma_gl_g}$ is the proportion of selfish types who belong to supraliminal groups.
+    A marginal increase in $p$ is modeled by a random selection of a selfish type who is replaced by a GR-type. That is, with probability $x$ this selfish type belongs to a supraliminal group and otherwise it belongs to a subliminal group.
+
+    Suppose first that the group from which the selfish type is randomly selected cannot switch from being subliminal to being supraliminal (even if was of size $l_g=k-1$).\footnote{\mm{What we mean by that is that this group will not be included in the sum $\Sigma_{\{g|l_g \geq k\}}$ even if it becomes of size $k$.}}
+    Then, with probability $x$, the increase in the LHS is given by $-N(\frac{\Sigma_{\{g|l_g \geq k\}}(n-l_g)-1}{N-\Sigma_gl_g-1}-x)$, and with probability $1-x$ the increase in the LHS is given by $-N(\frac{\Sigma_{\{g|l_g \geq k\}}(n-l_g)}{N-\Sigma_gl_g-1}-x)$.
+    Therefore, the expected increase in the LHS is given by
+    \begin{equation*}
+        -N[x(\frac{\Sigma_{\{g|l_g \geq k\}}(n-l_g)-1}{N-\Sigma_gl_g-1}-x)+(1-x)(\frac{\Sigma_{\{g|l_g \geq k\}}(n-l_g)}{N-\Sigma_gl_g-1}-x)] 
+    \end{equation*}
+    \begin{equation*}
+        =-N\big[\frac{x[\Sigma_{\{g|l_g \geq k\}}(n-l_g)-1]+(1-x)\Sigma_{\{g|l_g \geq k\}}(n-l_g)}{N-\Sigma_gl_g-1}-x \big]
+    \end{equation*}
+    \begin{equation*}
+        =-N\big[\frac{\Sigma_{\{g|l_g \geq k\}}(n-l_g)-x}{N-\Sigma_gl_g-1}-x \big].
+    \end{equation*}
+
+    Recalling that $x=\frac{\Sigma_{\{g|l_g \geq k\}}(n-l_g)}{N-\Sigma_gl_g}$ we get that
+    \begin{equation*}
+       -N\big[\frac{\Sigma_{\{g|l_g \geq k\}}(n-l_g)-x}{N-\Sigma_gl_g-1}-x \big]= -N\big[\frac{x(N-\Sigma_gl_g)-x}{N-\Sigma_gl_g-1}-x \big]=0.
+    \end{equation*}
+   That is, if we do not allow groups to switch from being subliminal to being supraliminal, then the effect of randomly replacing a selfish type with a GR-type on the LHS is zero. However, if this replacement results in a subliminal group becoming supraliminal (note that the opposite change is impossible), then $x$, the proportion of selfish types who belong to supraliminal groups, necessarily increases (there will be more selfish types in supraliminal groups out of less selfish types in the population), implying that $M-Nx$ (the LHS) must decrease.
+            }
 \end{proof}
 
 It follows that there is a unique ESS with a positive share of group
