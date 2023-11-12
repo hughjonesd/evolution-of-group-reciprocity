@@ -415,9 +415,7 @@ $1- \bpi$ captures the expected proportion of failures of a Binomially-distribut
 \begin{proof}
 Lemma \ref{lemma:eqiv_formulation} implies that if $x_i=1$ denotes the event where $x_i$ fails, and $S_n$ counts the number of failures among $n$ trials, then we need to show that $\frac{p(x_1=1|S_n \leq k)}{p(x_1=1)}$ increases in the probability of success $p$.
 For tractability, we will now revert to the more standard notation of $x_i=1$ as denoting the event where $x_i$ \textit{succeeds} (s.t. $S_n$ counts the number of successes among $n$ trials), and show that $\frac{p(x_1=1|S_n \leq k)}{p(x_1=1)}$ \textit{decreases} rather than increases in the probability of success $p$.
-\vspace{0.6 cm}
-
-\noindent \textbf{Version 1}
+% \vspace{0.6 cm}
 
 \begin{equation*}
     \frac{p(x_1=1|S_n \leq k)}{p(x_1=1)}=\frac{p(s_n \leq k|x_1=1)}{p(s_n \leq k)}=\frac{p(s_{n-1} \leq k-1)}{qp(s_{n-1} \leq k)+pp(s_{n-1} \leq k-1)}
@@ -428,16 +426,6 @@ For tractability, we will now revert to the more standard notation of $x_i=1$ as
     =\frac{p(s_{n-1} \leq k-1)}{q(p(s_{n-1} \leq k)-p(s_{n-1} \leq k-1))+p(s_{n-1} \leq k-1)}=\frac{p(s_{n-1} \leq k-1)}{qp(s_{n-1}=k)+p(s_{n-1} \leq k-1)}.
 \end{equation*}
 
-
-\vspace{0.3 cm}
-\noindent \textbf{Version 2}
-\vspace{0.6 cm}
-
-$\frac{p(x_1=1|S_n \leq k)}{p(x_1=1)}=\frac{p(s_n \leq k|x_1=1)}{p(s_n \leq k)}=\frac{p(s_{n-1} \leq k-1)}{qp(s_{n-1} \leq k)+pp(s_{n-1} \leq k-1)}$
-
-\vspace{0.3cm}
-$=\frac{p(s_{n-1} \leq k-1)}{q(p(s_{n-1} \leq k)-p(s_{n-1} \leq k-1))+p(s_{n-1} \leq k-1)}=\frac{p(s_{n-1} \leq k-1)}{qp(s_{n-1}=k)+p(s_{n-1} \leq k-1)}.$
-\vspace{1 cm}
 
 \noindent 
 Using a known result,\footnote{See equations (3) and (4) in https://mathworld.wolfram.com/BinomialDistribution.html.} according to which
