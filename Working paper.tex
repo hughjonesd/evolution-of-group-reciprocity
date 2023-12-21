@@ -245,7 +245,7 @@ After rearranging, the mean fitness of reciprocators is higher if
 \begin{equation}
 \label{gr-wins}
 \frac{ \bpi - p}{ 1 - p} \ge \frac{c}{b}
-\mm{\Longleftrightarrow \frac{N\Sigma_{\{g|l_g \geq k\}}l_g-M\Sigma_gl_g}{N-\Sigma_gl_g} \frac{1}{M} \ge \frac{c}{b}}.
+\mm{\Longleftrightarrow \frac{N\Sigma_{\{g|l_g \geq k\}}l_g-M\Sigma_gl_g}{N-\Sigma_gl_g} \ge M\frac{c}{b}}.
 \end{equation}
 
 where \mm{$M \equiv qN=\Sigma_{\{g|l_g \geq k\}}n$ and $\bpi = \frac{\Sigma_{\{g|l_g \geq k\}}l_g}{M}$.
@@ -254,7 +254,10 @@ where \mm{$M \equiv qN=\Sigma_{\{g|l_g \geq k\}}n$ and $\bpi = \frac{\Sigma_{\{g
 % \bpi = \frac{\Sigma_{\{g|l_g \geq k\}}l_g}{M}
 % \]
 
-Rewriting the LHS of \eqref{gr-wins} as follows: $LHS=\frac{M-Nx}{M}=1-\frac{x}{M/N}$, where $x \equiv \frac{\Sigma_{\{g|l_g \geq k\}}(n-l_g)}{N-\Sigma_gl_g}$ is the proportion of selfish types who belong to supraliminal groups, we get that the mean fitness of reciprocators is higher than that of the selfish if
+\vspace{0.2cm}
+If there are no supraliminal groups ($M=0$), then \eqref{gr-wins} weakly holds (LHS=RHS=0), capturing the notion that both types are behaviorally equivalent if GR types have no group (including their own) to maintain mutual helping with.
+
+Otherwise, if $M>0$, we can divide both side of \eqref{gr-wins} by $M$ and rewrite the LHS as follows: $LHS=\frac{M-Nx}{M}=1-\frac{x}{M/N}$, where $x \equiv \frac{\Sigma_{\{g|l_g \geq k\}}(n-l_g)}{N-\Sigma_gl_g}$ is the proportion of selfish types who belong to supraliminal groups, we get that the mean fitness of reciprocators is higher than that of the selfish if
 }
 
 \begin{equation}
