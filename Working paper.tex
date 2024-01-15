@@ -105,7 +105,7 @@ Our model also suggests some insights about how group reciprocal motivations are
 
 \section{Literature review}
 
-Evidence for group reciprocity, or "vicarious revenge", comes from the lab 
+Evidence for group reciprocity, or ``vicarious revenge", comes from the lab 
 \parencite{lickel_vicarious_2006,gaertner2008whenrejection,stenstrom_roles_2008,hugh2017intergroup,hugh2019humans,romano2022direct}
 and the field, including violent intergroup conflict \parencite{haushofer_both_2010}
 and feuding institutions \parencite{boehm1984blood,chagnon1988lifehistories}. 
@@ -257,17 +257,17 @@ where \mm{$M \equiv qN=\Sigma_{\{g|l_g \geq k\}}n$ and $\bpi = \frac{\Sigma_{\{g
 \vspace{0.2cm}
 If there are no supraliminal groups ($M=0$), then \eqref{gr-wins} weakly holds (LHS=RHS=0), capturing the notion that both types are behaviorally equivalent if GR types have no group (including their own) to maintain mutual helping with.
 
-Otherwise, if $M>0$, we can divide both side of \eqref{gr-wins} by $M$ and rewrite the LHS as follows: $LHS=\frac{M-Nx}{M}=1-\frac{x}{M/N}$, where $x \equiv \frac{\Sigma_{\{g|l_g \geq k\}}(n-l_g)}{N-\Sigma_gl_g}$ is the proportion of selfish types who belong to supraliminal groups, we get that the mean fitness of reciprocators is higher than that of the selfish if
+Otherwise, if $M>0$, we can divide both sides of \eqref{gr-wins} by $M$ and rewrite the new LHS as follows: $New\_LHS=\frac{M-Nx}{M}=1-\frac{x}{M/N}=1-x/q$, where $x \equiv \frac{\Sigma_{\{g|l_g \geq k\}}(n-l_g)}{N-\Sigma_gl_g}$ is the proportion of selfish types who belong to supraliminal groups. We thus get that the mean fitness of reciprocators is higher than that of the selfish if
 }
 
 \begin{equation}
 \label{gr-wins-2}
-\mm{\frac{x}{M/N} \le 1-\frac{c}{b}}.
+\mm{\frac{x}{q} \le 1-\frac{c}{b}}.
 \end{equation}
 
 \begin{prop}
 \label{prop:decrease_in_p}
-    \mm{If $M \neq 0$, then} the LHS of equation \eqref{gr-wins} is decreasing in $p=\mm{\frac{\Sigma_gl_g}{N}}$ \sout{and is equal
+    \mm{If $M \neq 0$, then} the LHS of equation \eqref{gr-wins-2} is \sout{de}\mm{in}creasing in $p=\mm{\frac{\Sigma_gl_g}{N}}$ \sout{and is equal
 to the threshold $k$ when $p = 0$}.\footnote{\sout{
     When the share of GR in the population is very small, the probability that $p_g = k$ conditional on~$p_g\geq k$ goes to one.
 }}
