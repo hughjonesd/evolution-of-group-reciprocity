@@ -26,6 +26,7 @@
 library(dplyr)
 library(purrr)
 library(ggplot2)
+library(glue)
 
 #' Run a single simulation with specific parameters
 #'
@@ -106,15 +107,20 @@ run_one_generation <- function (thresholds, params) {
   # where everybody cooperated. Then only "selfish" types with
   # a threshold above 1 will not cooperate in round 1
   coop <- matrix(TRUE, N, N)
-  unchanged <- FALSE
+  changed <- TRUE
   for (t in 1:T_rounds) {
     # if cooperation is unchanged from last time, result will be unchanged too:
-    if (! unchanged) {
+    if (changed) {
       result <- run_one_round(coop_last_round = coop, thresholds = thresholds, 
                             params = params)
+    } else {
+      # we can just add the payoffs times number of remaining rounds, then break
+      payoffs <- payoffs + result$payoffs*(T_rounds + 1 - t)
+      break
     }
     payoffs <- payoffs + result$payoffs
-    unchanged <- all(result$coop == coop)
+    # max() appears faster than any()
+    changed <- max(result$coop != coop) 
     coop <- result$coop
   }
   
@@ -269,16 +275,24 @@ stop("Tests below")
 
 set.seed(27101975)
 
+n_simulations <- 100
+group_size_G <- 8
+n_generations <- 500
+
 basic_params <- expand.grid(
                   b = c(2, 5), 
                   c = 1, 
-                  G = 8, 
-                  n_groups = c(10, 50),
-                  T_rounds = c(10, 20), 
+                  G = group_size_G, 
+                  n_groups = c(10, 50, 200),
+                  T_rounds = c(10, 20, 50), 
                   k = c(0.4, 0.8), 
-                  generations = 500,
-                  experiment = 1:20 # 16x20 experiments takes about 15 mins with 500 gens
-                )
+                  generations = n_generations,
+                  experiment = 1:n_simulations 
+                ) |> 
+  filter(
+    (n_groups < 200 & T_rounds < 50) | (n_groups == 200 & T_rounds == 50) 
+  )
+
 
 basic_params$prop_gr_final <- basic_params |> 
                         select(-experiment) |> 
@@ -306,10 +320,27 @@ basic_results |>
   ggplot(aes(x = `c/b`, y = mean_gr, shape = k, color = k)) + 
     facet_grid(vars(`N groups`), vars(`T`), labeller = label_both) + 
     geom_point(size = 3, position = position_dodge(width = 0.1)) + 
-    theme_linedraw() + labs(y = "Prop. GR types")
+    theme_linedraw() + 
+    labs(
+      y = "Prop. GR types", 
+      subtitle = glue::glue("{n_simulations} simulations, G = {group_size_G}, max {n_generations} generations")
+    )
+    
 
 ggsave("R files/basic-experiment.jpeg", width = 5, height = 4)
 
+# TODO:
+# - regenerate the above figure with more generations & replications;
+# - add a row with n_groups = 200, a column with T = 50
+# - check we approach the theoretical result?
+# - simulations with a power function proportional response:
+#   you cooperate with probability x^alpha where x is the prop in the group
+#   that cooperated with you; alpha > 0.
+# - theory of power functions. Does it collapse to threshold k = 1 when
+#   alpha >= 1? more generally, for any line below the diagonal?
+# - simulate evolution of thresholds?
+#   - either mutation during the sim, or simulate invasion by a mutant
+#     starting from an eqm distribution of types.
 
 ## Large groups ====
 
