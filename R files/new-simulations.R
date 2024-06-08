@@ -299,6 +299,8 @@ basic_params$prop_gr_final <- basic_params |>
                         purrr::pmap(run_simulation, .progress = TRUE) |> 
                         purrr::map_dbl(\(x) mean(x < 1))
 
+today <- Sys.Date()
+saveRDS(basic_params, file = glue::glue("R files/basic-params-{today}.Rds"))
 
 basic_results <- basic_params |> 
                  group_by(b, n_groups, T_rounds, k) |>
