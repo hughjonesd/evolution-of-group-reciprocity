@@ -493,3 +493,4 @@ ss2 |>
                         ymin = inc_gr - 1.96*se_gr_final), size = 0.3) +
     facet_grid(vars(n_groups), vars(G), labeller = label_both) +
     theme_linedraw()
+
