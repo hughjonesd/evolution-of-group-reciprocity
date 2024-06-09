@@ -23,8 +23,10 @@
 #  
 #  
 
+## setup ====
 library(dplyr)
 library(purrr)
+library(furrr)
 library(ggplot2)
 library(glue)
 
@@ -344,29 +346,119 @@ ggsave("R files/basic-experiment.jpeg", width = 5, height = 4)
 #   - either mutation during the sim, or simulate invasion by a mutant
 #     starting from an eqm distribution of types.
 
-## Large groups ====
 
-group_size <- data.frame(
-                b = 10, 
-                c = 1, 
-                G = 40, 
-                n_groups = 40,
-                T_rounds = 20, 
-                k = 0.6, 
-                generations = 500,
-                prop_gr = 0.6,
-                experiment = 1:10
-              )
+## Evolution from many thresholds ====
+ 
+set.seed(27101975)
+plan(multisession, workers = 6)
 
-group_size$prop_gr_final <- group_size |> 
-                            select(-experiment) |> 
-                            purrr::pmap(run_simulation, .progress = TRUE) |> 
-                            purrr::map_dbl(\(x) mean(x < 1))
+n_simulations <- 100
+group_size_G <- 50
+n_generations <- 2000
+n_groups <- 20
+T_rounds <- 20
 
+fixation_params <- expand.grid(
+  b = c(2, 5),
+  c = 1,
+  G = group_size_G,
+  n_groups = n_groups,
+  T_rounds = T_rounds,
+  generations = n_generations,
+  experiment = 1:n_simulations
+) |> 
+  rowwise() |> 
+  mutate(
+    initial_thresholds = list(
+      c(runif(n_groups * G * 0.9), 
+        rep(1, n_groups * G * 0.1))
+    )
+  ) |> 
+  ungroup()
+
+fixation_params$result <- fixation_params |> 
+                        select(-experiment) |> 
+                        furrr::future_pmap(run_simulation, .progress = TRUE,
+                                           .options = furrr::furrr_options(seed = TRUE))
+                        
+
+fixation_results <- fixation_params |> 
+  rowwise() |> 
+  mutate( 
+    result_n = n_distinct(result),
+    result_min = min(result),
+    result_max = max(result),
+    result_mean = mean(result)
+  ) |> 
+  ungroup()
+
+fixation_results |> 
+  mutate(
+    `Distinct thresholds` = factor(result_n),
+    `Mean threshold` = result_mean,
+    `b/c` = factor(b)
+  ) |> 
+  ggplot(aes(x = `b/c`, y = `Mean threshold`)) + 
+    geom_violin(draw_quantiles = 1:3/4) +
+    geom_point(aes(color = `Distinct thresholds`), alpha = 0.5) +
+    theme_linedraw() +
+    labs(
+      subtitle = glue::glue("{n_simulations} simulations, max {n_generations} generations, 
+                            {n_groups} groups, {T_rounds} rounds")
+    )
+
+
+## Checking for new entrants, starting with selfish ====
+## 
+
+set.seed(27101975)
+plan(multisession, workers = 6)
+
+n_simulations <- 100
+n_generations <- 1000
+T_rounds <- 50
+
+entrant_params <- expand.grid(
+  b = 5,
+  c = 1,
+  G = c(10, 20),
+  n_groups = c(20, 40),
+  T_rounds = T_rounds,
+  generations = n_generations,
+  experiment = 1:n_simulations,
+  prop_gr = 0.2,
+  k = seq(0.1, 0.9, 0.1)
+)  
+
+entrant_params$result <- entrant_params |> 
+                         select(-experiment) |> 
+                         furrr::future_pmap(run_simulation, .progress = TRUE,
+                                           .options = furrr::furrr_options(seed = TRUE))
+ 
+entrant_results <- entrant_params |> 
+  rowwise() |> 
+  mutate( 
+    result_n = n_distinct(result),
+    result_min = min(result),
+    result_max = max(result),
+    result_mean = mean(result)
+  ) |> 
+  ungroup()
+
+entrant_results |> 
+  summarize(.by = c(G, n_groups, k),
+    prop_survived = mean(result_mean < 1),
+    prop_fixated = mean(result_n == 1 & result_mean < 1)
+  ) |> 
+  ggplot(aes(k, prop_survived)) +
+    geom_col() +
+    geom_col(aes(y = prop_fixated), fill = alpha("orange", 0.5)) +
+    facet_grid(vars(G), vars(n_groups), labeller = label_both)
+  
 
 ## Finding the state space ==== 
 
-
+# This is old, not sure if relevant
 
 
 ss <- map_state_space(b = c(2, 5, 8), c = 1, k = c(0.4, 0.6, 0.8), G = 8, 
