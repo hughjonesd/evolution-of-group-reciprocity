@@ -414,20 +414,20 @@ fixation_results |>
 set.seed(27101975)
 plan(multisession, workers = 6)
 
-n_simulations <- 100
-n_generations <- 1000
+n_simulations <- 50
+n_generations <- 500
 T_rounds <- 50
 
 entrant_params <- expand.grid(
-  b = 5,
+  b = 8,
   c = 1,
-  G = c(10, 20),
-  n_groups = c(20, 40),
+  G = 10,
+  n_groups = c(20, 40, 60),
   T_rounds = T_rounds,
   generations = n_generations,
   experiment = 1:n_simulations,
-  prop_gr = 0.2,
-  k = seq(0.1, 0.9, 0.1)
+  prop_gr = c(0.2, 0.8),
+  k = c(0.1, 0.5, 0.9)
 )  
 
 entrant_params$result <- entrant_params |> 
@@ -446,14 +446,18 @@ entrant_results <- entrant_params |>
   ungroup()
 
 entrant_results |> 
-  summarize(.by = c(G, n_groups, k),
+  summarize(.by = c(G, n_groups, k, prop_gr),
     prop_survived = mean(result_mean < 1),
     prop_fixated = mean(result_n == 1 & result_mean < 1)
+  ) |> mutate(
+    k = factor(k)
   ) |> 
-  ggplot(aes(k, prop_survived)) +
-    geom_col() +
-    geom_col(aes(y = prop_fixated), fill = alpha("orange", 0.5)) +
-    facet_grid(vars(G), vars(n_groups), labeller = label_both)
+  ggplot(aes(x = k)) +
+    geom_col(aes(y = prop_survived)) +
+    geom_col(aes(y = prop_fixated), color = "red", fill = NA) +
+    facet_grid(vars(prop_gr), vars(n_groups, G), labeller = label_both,
+              scales = "free") +
+    labs(y = "Prop. survived/fixated")
   
 
 ## Finding the state space ==== 
